@@ -215,7 +215,7 @@ class Python33 < Formula
       end
     end
 
-    rm_rf [bin/"pip", bin/"easy_install"]
+    rm_rf [bin/"pip", bin/"easy_install", bin/"pyvenv"]
     mv bin/"wheel", bin/"wheel3.3"
 
     # post_install happens after link
