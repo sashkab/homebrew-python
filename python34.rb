@@ -319,7 +319,7 @@ class Python34 < Formula
     system "#{bin}/python#{xy}", "-c", "import sqlite3"
     # Check if some other modules import. Then the linked libs are working.
     system "#{bin}/python#{xy}", "-c", "import tkinter; root = tkinter.Tk()"
-    system bin/"pip3", "list"
+    system bin/"pip3.4", "list"
   end
 end
 
