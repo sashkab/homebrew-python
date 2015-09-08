@@ -4,14 +4,20 @@ This [Homebrew](http://brew.sh) tap provides formulæ to install multiple Python
 
 Please send us a pull request if you don't see your favorite!
 
-<div style="height: 320px; overflow:hidden;">
-<a href="https://xkcd.com/353/"><img src="http://imgs.xkcd.com/comics/python.png" alt="'You're flying! How?' 'Python!'"></a>
-</div>
-
 ## How do I install these formulæ?
+
 `brew install zoidbergwill/python/<formula>`
 
 Or `brew tap zoidbergwill/python` and then `brew install <formula>`.
+
+## Usage
+
+```sh
+$ brew install python34
+$ pip3.4 install -U pip setuptools
+```
+
+We don't ever install to `pip3` or `python3`, since we don't know which Python version you want to use in general. Eventually I hope to add support for that.
 
 ## Troubleshooting
 Please check the main [Homebrew troubleshooting guide](https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Troubleshooting.md#troubleshooting) and then [open an issue in this tap](https://github.com/Homebrew/homebrew-python/issues/new).
