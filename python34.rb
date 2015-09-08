@@ -217,7 +217,7 @@ class Python34 < Formula
     mv bin/"wheel", bin/"wheel3.4"
 
     # post_install happens after link
-    %W[pip#{xy} easy_install-#{xy} wheel3.4].each do |e|
+    %W[pip#{xy} easy_install-#{xy} wheel3.4 pyvenv3.4].each do |e|
       (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
