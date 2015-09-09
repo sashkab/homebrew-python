@@ -2,7 +2,7 @@
 
 This [Homebrew](http://brew.sh) tap provides formulæ to install multiple Python versions.
 
-Please send us a pull request if you don't see your favorite!
+We currently support Python 3.3.5, Python 3.4.3, and Python 3.5.0rc3 (requires --devel).
 
 ## How do I install these formulæ?
 
@@ -17,7 +17,7 @@ $ brew install python34
 $ pip3.4 install -U pip setuptools
 ```
 
-We don't ever install to `pip3` or `python3`, since we don't know which Python version you want to use in general. Eventually I hope to add support for that.
+We don't ever install to `pip3`, `pyvenv`, or `python3`, since we don't know which Python version you want to use in general. Eventually I hope to add support for that somehow, though using [pyenv](https://github.com/yyuu/pyenv) might be a better solution.
 
 ## Troubleshooting
 Please check the main [Homebrew troubleshooting guide](https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Troubleshooting.md#troubleshooting) and then [open an issue in this tap](https://github.com/Homebrew/homebrew-python/issues/new).
