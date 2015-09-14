@@ -1,6 +1,8 @@
 class Python35 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
+  url "https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tar.xz"
+  sha256 "d6d7aa1634a5eeeca6ed4fca266982a04f84bd8f3945a9179e20b24ad2e2be91"
 
   devel do
     url "https://www.python.org/ftp/python/3.5.0/Python-3.5.0rc4.tgz"
