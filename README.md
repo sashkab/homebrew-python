@@ -2,7 +2,7 @@
 
 This [Homebrew](http://brew.sh) tap provides formulæ to install multiple Python versions.
 
-We currently support Python 3.3.5, Python 3.4.3, and Python 3.5.0rc3 (requires --devel).
+We currently support Python 3.3.6, Python 3.4.3, and Python 3.5.0.
 
 ## How do I install these formulæ?
 
