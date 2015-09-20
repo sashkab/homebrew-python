@@ -146,7 +146,7 @@ class Python33 < Formula
 
     ENV.deparallelize # Installs must be serialized
     # Tell Python not to install into /Applications (default for framework builds)
-    system "make", "install", "PYTHONAPPSDIR=#{prefix}"
+    system "make", "altinstall", "PYTHONAPPSDIR=#{prefix}"
     # Demos and Tools
     system "make", "frameworkinstallextras", "PYTHONAPPSDIR=#{share}/python3"
     system "make", "quicktest" if build.include? "quicktest"
