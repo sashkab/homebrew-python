@@ -1,7 +1,7 @@
 class Python33 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url 'http://python.org/ftp/python/3.3.5/Python-3.3.6.tgz'
+  url 'http://python.org/ftp/python/3.3.6/Python-3.3.6.tgz'
   sha1 'a4d96b5cad5ed04cf02c9fcedaaaab3491bc885f'
   revision 2
 
