@@ -4,7 +4,7 @@ class Python33 < Formula
   url 'http://python.org/ftp/python/3.3.5/Python-3.3.5.tgz'
   sha1 '15f24702c5ae07d364606c663e515c1d9ba58615'
   revision 2
-  
+
   head "https://hg.python.org/cpython", :using => :hg, :branch => '3.3'
 
   option :universal
@@ -146,7 +146,7 @@ class Python33 < Formula
 
     ENV.deparallelize # Installs must be serialized
     # Tell Python not to install into /Applications (default for framework builds)
-    system "make", "install", "PYTHONAPPSDIR=#{prefix}"
+    system "make", "altinstall", "PYTHONAPPSDIR=#{prefix}"
     # Demos and Tools
     system "make", "frameworkinstallextras", "PYTHONAPPSDIR=#{share}/python3"
     system "make", "quicktest" if build.include? "quicktest"
