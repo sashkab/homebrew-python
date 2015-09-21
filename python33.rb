@@ -164,9 +164,6 @@ class Python33 < Formula
     # Symlink the pkgconfig files into HOMEBREW_PREFIX so they're accessible.
     (lib/"pkgconfig").install_symlink Dir["#{frameworks}/Python.framework/Versions/#{xy}/lib/pkgconfig/*"]
 
-    # # Remove 2to3 because python2 also installs it
-    # rm bin/"2to3"
-
     # Remove the site-packages that Python created in its Cellar.
     site_packages_cellar.rmtree
 
