@@ -1,8 +1,8 @@
 class Python35 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.5.0/Python-3.5.0.tar.xz"
-  sha256 "d6d7aa1634a5eeeca6ed4fca266982a04f84bd8f3945a9179e20b24ad2e2be91"
+  url "https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tar.xz"
+  sha256 "c6d57c0c366d9060ab6c0cdf889ebf3d92711d466cc0119c441dbf2746f725c9"
 
   head "https://hg.python.org/cpython", :using => :hg
 
@@ -26,8 +26,8 @@ class Python35 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.python.org/packages/source/s/setuptools/setuptools-18.3.2.tar.gz"
-    sha256 "8c4ab0c4f227730519dc1e020f875b3ef97e643c8f43a98a4fa0c46fbad12450"
+    url "https://pypi.python.org/packages/source/s/setuptools/setuptools-18.7.1.tar.gz"
+    sha256 "aff36c95035e0b311eacb1434e3f7e85f5ccaad477773847e582978f8f45bd74"
   end
 
   resource "pip" do
