@@ -5,8 +5,8 @@ class Python36 < Formula
   head "https://hg.python.org/cpython", :using => :hg
 
   devel do
-    url "https://www.python.org/ftp/python/3.6.0/Python-3.6.0a3.tar.xz"
-    sha256 "2cd0611c3456a83737d99d8ffd36d4094b3d44c29dd3a4185f1146be502a8321"
+    url "https://www.python.org/ftp/python/3.6.0/Python-3.6.0a4.tar.xz"
+    sha256 "63acec349d20de412682f64c013f7c3374c695430b44e1c0ef12076da1d7fd2c"
   end
 
   option :universal
