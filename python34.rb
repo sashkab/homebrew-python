@@ -1,9 +1,9 @@
 class Python34 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  head "https://hg.python.org/cpython", :using => :hg, :branch => "3.4"
   url "https://www.python.org/ftp/python/3.4.5/Python-3.4.5.tar.xz"
   sha256 "ee64b1c8a47461009abf25252332d29a4e587cb4f0c1c96aa793a3732e9d898a"
+  head "https://hg.python.org/cpython", :using => :hg, :branch => "3.4"
 
   option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of OS X Tk (has optional Cocoa and threads support)"
@@ -17,7 +17,7 @@ class Python34 < Formula
   depends_on "sqlite" => :recommended
   depends_on "gdbm" => :recommended
   depends_on "openssl"
-  depends_on "xz" => :recommended  # for the lzma module added in 3.3
+  depends_on "xz" => :recommended # for the lzma module added in 3.3
   depends_on "homebrew/dupes/tcl-tk" => :optional
   depends_on :x11 if build.with?("tcl-tk") && Tab.for_name("homebrew/dupes/tcl-tk").with?("x11")
 
@@ -55,19 +55,6 @@ class Python34 < Formula
   # The HOMEBREW_PREFIX location of site-packages.
   def site_packages
     HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"
-  end
-
-  fails_with :llvm do
-    build 2336
-    cause <<-EOS.undent
-      Could not find platform dependent libraries <exec_prefix>
-      Consider setting $PYTHONHOME to <prefix>[:<exec_prefix>]
-      python.exe(14122) malloc: *** mmap(size=7310873954244194304) failed (error code=12)
-      *** error: can't allocate region
-      *** set a breakpoint in malloc_error_break to debug
-      Could not import runpy module
-      make: *** [pybuilddir.txt] Segmentation fault: 11
-    EOS
   end
 
   # setuptools remembers the build flags python is built with and uses them to
