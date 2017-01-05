@@ -196,9 +196,6 @@ class Python35 < Formula
     # Symlink the pkgconfig files into HOMEBREW_PREFIX so they're accessible.
     (lib/"pkgconfig").install_symlink Dir["#{frameworks}/Python.framework/Versions/#{xy}/lib/pkgconfig/*"]
 
-    # Remove packages which can conflict with python2 and python 3.x
-    rm [bin/"2to3", bin/"pyvenv", bin/"idle3", bin/"pydoc3", bin/"python3-config", bin/"python3", bin/"python3-32"]
-
     # Remove the site-packages that Python created in its Cellar.
     site_packages_cellar.rmtree
 
