@@ -2,7 +2,7 @@
 
 This [Homebrew](http://brew.sh) tap provides formulæ to install multiple Python versions.
 
-We currently support Python 3.3.6, Python 3.4.5, Python 3.5.2 and Python 3.6.0.
+We currently support Python 3.3.6, Python 3.4.6, Python 3.5.3 and Python 3.6.0.
 
 ## How do I install these formulæ?
 
@@ -12,9 +12,16 @@ Or `brew tap sashkab/python` and then `brew install <formula>`.
 
 ## Usage
 
-```sh
-$ brew install python34
+### Python 3.4
+
+```bash
+$ brew install sashkab/python/python34
 $ pip3.4 install -U pip setuptools
 ```
 
-We make best effort not to conflict with the [python3](https://github.com/Homebrew/homebrew-core/blob/master/Formula/python3.rb) formula in Homebrew, but this is WIP currently.
+### Python 3.5
+
+```bash
+$ brew install sashkab/python/python35
+$ pip3.5 install -U pip setuptools
+```
