@@ -3,8 +3,8 @@ class Python36 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz"
   sha256 "b0c5f904f685e32d9232f7bdcbece9819a892929063b6e385414ad2dd6a23622"
-  head "https://github.com/python/cpython", :using => :git
   revision 1
+  head "https://github.com/python/cpython", :using => :git
 
   option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"
