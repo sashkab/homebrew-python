@@ -3,7 +3,7 @@ class Python36 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz"
   sha256 "b0c5f904f685e32d9232f7bdcbece9819a892929063b6e385414ad2dd6a23622"
-  head "https://hg.python.org/cpython", :using => :hg
+  head "https://github.com/python/cpython", :using => :git
 
   option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"
@@ -51,19 +51,6 @@ class Python36 < Formula
   # X11.
   patch :DATA if build.with? "tcl-tk"
 
-  def lib_cellar
-    prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}"
-  end
-
-  def site_packages_cellar
-    lib_cellar/"site-packages"
-  end
-
-  # The HOMEBREW_PREFIX location of site-packages.
-  def site_packages
-    HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"
-  end
-
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
   pour_bottle? do
@@ -82,6 +69,9 @@ class Python36 < Formula
     # and not into some other Python the user has installed.
     ENV["PYTHONHOME"] = nil
     ENV["PYTHONPATH"] = nil
+
+    xy = (buildpath/"configure.ac").read.slice(/PYTHON_VERSION, (3\.\d)/, 1)
+    lib_cellar = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}"
 
     args = %W[
       --prefix=#{prefix}
@@ -192,7 +182,7 @@ class Python36 < Formula
     rm bin/"2to3"
 
     # Remove the site-packages that Python created in its Cellar.
-    site_packages_cellar.rmtree
+    (prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/site-packages").rmtree
 
     %w[setuptools pip wheel].each do |r|
       (libexec/r).install resource(r)
@@ -207,6 +197,12 @@ class Python36 < Formula
   end
 
   def post_install
+    ENV.delete "PYTHONPATH"
+
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.first.basename.to_s
+    site_packages = HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"
+    site_packages_cellar = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/site-packages"
+
     # Fix up the site-packages so that user-installed Python software survives
     # minor updates, such as going from 3.3.2 to 3.3.3:
 
@@ -261,7 +257,8 @@ class Python36 < Formula
       library_dirs << Formula["homebrew/dupes/tcl-tk"].opt_lib
     end
 
-    cfg = lib_cellar/"distutils/distutils.cfg"
+    cfg = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/distutils/distutils.cfg"
+
     cfg.atomic_write <<-EOF.undent
       [install]
       prefix=#{HOMEBREW_PREFIX}
@@ -272,15 +269,13 @@ class Python36 < Formula
     EOF
   end
 
-  def xy
-    version.to_s.slice(/(3\.\d)/) || "3.6"
-  end
-
   def sitecustomize
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.first.basename.to_s
+
     <<-EOF.undent
       # This file is created by Homebrew and is executed on each python startup.
       # Don't print from here, or else python command line scripts may fail!
-      # <https://github.com/Homebrew/brew/blob/master/docs/Homebrew-and-Python.md>
+      # <http://docs.brew.sh/Homebrew-and-Python.html>
       import re
       import os
       import sys
@@ -307,7 +302,7 @@ class Python36 < Formula
           # the Cellar site-packages is a symlink to the HOMEBREW_PREFIX
           # site_packages; prefer the shorter paths
           long_prefix = re.compile(r'#{rack}/[0-9\._abrc]+/Frameworks/Python\.framework/Versions/#{xy}/lib/python#{xy}/site-packages')
-          sys.path = [long_prefix.sub('#{site_packages}', p) for p in sys.path]
+          sys.path = [long_prefix.sub('#{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}', p) for p in sys.path]
 
           # Set the sys.executable to use the opt_prefix
           sys.executable = '#{opt_bin}/python#{xy}'
@@ -315,17 +310,22 @@ class Python36 < Formula
   end
 
   def caveats
+    if prefix.exist?
+      xy = (prefix/"Frameworks/Python.framework/Versions").children.first.basename.to_s
+    else
+      xy = version.to_s.slice(/(3\.\d)/) || "3.6"
+    end
     text = <<-EOS.undent
       Pip, setuptools, and wheel have been installed. To update them
-        pip3.6 install --upgrade pip setuptools wheel
+        pip3 install --upgrade pip setuptools wheel
 
       You can install Python packages with
-        pip3.6 install <package>
+        pip3 install <package>
 
       They will install into the site-package directory
-        #{site_packages}
+        #{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}
 
-      See: https://github.com/Homebrew/brew/blob/master/docs/Homebrew-and-Python.md
+      See: http://docs.brew.sh/Homebrew-and-Python.html
     EOS
 
     # Tk warning only for 10.6
@@ -340,6 +340,7 @@ class Python36 < Formula
   end
 
   test do
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.first.basename.to_s
     # Check if sqlite is ok, because we build with --enable-loadable-sqlite-extensions
     # and it can occur that building sqlite silently fails if OSX's sqlite is used.
     system "#{bin}/python#{xy}", "-c", "import sqlite3"
