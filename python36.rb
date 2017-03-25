@@ -181,7 +181,7 @@ class Python36 < Formula
     (lib/"pkgconfig").install_symlink Dir["#{frameworks}/Python.framework/Versions/#{xy}/lib/pkgconfig/*"]
 
     # Remove 2to3 because python2 also installs it
-    rm bin/"2to3"
+    # rm bin/"2to3"
 
     # Remove the site-packages that Python created in its Cellar.
     (prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/site-packages").rmtree
