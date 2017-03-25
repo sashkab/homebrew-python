@@ -3,7 +3,7 @@ class Python35 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.5.3/Python-3.5.3.tar.xz"
   sha256 "eefe2ad6575855423ab630f5b51a8ef6e5556f774584c06beab4926f930ddbb0"
-  revision 0
+  revision 1
 
   head "https://hg.python.org/cpython", :using => :hg
 
@@ -29,8 +29,8 @@ class Python35 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.5"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-32.2.0.zip"
-    sha256 "634313924fd186a2be0489c96965f5a909b666bd652eb3e16724913c707ec33f"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-33.1.1.zip"
+    sha256 "6b20352ed60ba08c43b3611bdb502286f7a869fbfcf472f40d7279f1e77de145"
   end
 
   resource "pip" do
