@@ -1,9 +1,9 @@
 class Python36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tar.xz"
-  sha256 "b0c5f904f685e32d9232f7bdcbece9819a892929063b6e385414ad2dd6a23622"
-  revision 1
+  url "https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tar.xz"
+  sha256 "a01810ddfcec216bcdb357a84bfaafdfaa0ca42bbdaa4cb7ff74f5a9961e4041"
+  revision 0
   head "https://github.com/python/cpython", :using => :git
 
   option :universal
@@ -28,8 +28,8 @@ class Python36 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-32.2.0.zip"
-    sha256 "634313924fd186a2be0489c96965f5a909b666bd652eb3e16724913c707ec33f"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-33.1.1.zip"
+    sha256 "6b20352ed60ba08c43b3611bdb502286f7a869fbfcf472f40d7279f1e77de145"
   end
 
   resource "pip" do

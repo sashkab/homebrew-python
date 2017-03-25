@@ -15,13 +15,20 @@ Or `brew tap sashkab/python` and then `brew install <formula>`.
 ### Python 3.4
 
 ```bash
-$ brew install sashkab/python/python34
+$ brew install sashkab/python/python34  [--universal]
 $ pip3.4 install -U pip setuptools
 ```
 
 ### Python 3.5
 
 ```bash
-$ brew install sashkab/python/python35
+$ brew install sashkab/python/python35 [--universal]
 $ pip3.5 install -U pip setuptools
+```
+
+### Python 3.6
+
+```bash
+$ brew install sashkab/python/python36 [--universal]
+$ pip3.6 install -U pip setuptools
 ```
