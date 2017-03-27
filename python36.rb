@@ -3,7 +3,7 @@ class Python36 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tar.xz"
   sha256 "a01810ddfcec216bcdb357a84bfaafdfaa0ca42bbdaa4cb7ff74f5a9961e4041"
-  revision 0
+  revision 1
   head "https://github.com/python/cpython", :using => :git
 
   option :universal
@@ -15,11 +15,11 @@ class Python36 < Formula
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
-  depends_on "readline" => :recommended
-  depends_on "sqlite" => :recommended
-  depends_on "gdbm" => :recommended
-  depends_on "openssl"
-  depends_on "xz" => :recommended # for the lzma module added in 3.3
+  depends_on "sashkab/universal/ureadline" => :recommended
+  depends_on "sashkab/universal/usqlite" => :recommended
+  depends_on "sashkab/universal/ugdbm" => :recommended
+  depends_on "sashkab/universal/uopenssl"
+  depends_on "sashkab/universal/uxz" => :recommended # for the lzma module added in 3.3
   depends_on "homebrew/dupes/tcl-tk" => :optional
   depends_on :x11 if build.with?("tcl-tk") && Tab.for_name("homebrew/dupes/tcl-tk").with?("x11")
   depends_on "sphinx-doc" => [:build, :optional]

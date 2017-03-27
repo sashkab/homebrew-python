@@ -15,11 +15,11 @@ class Python33 < Formula
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
-  depends_on "readline" => :recommended
-  depends_on "sqlite" => :recommended
-  depends_on "gdbm" => :recommended
-  depends_on "openssl"
-  depends_on "xz" => :recommended # for the lzma module added in 3.3
+  depends_on "sashkab/universal/ureadline" => :recommended
+  depends_on "sashkab/universal/usqlite" => :recommended
+  depends_on "sashkab/universal/ugdbm" => :recommended
+  depends_on "sashkab/universal/uopenssl"
+  depends_on "sashkab/universal/uxz" => :recommended # for the lzma module added in 3.3
   depends_on "homebrew/dupes/tcl-tk" => :optional
   depends_on :x11 if build.with?("tcl-tk") && Tab.for_name("homebrew/dupes/tcl-tk").with?("x11")
 
