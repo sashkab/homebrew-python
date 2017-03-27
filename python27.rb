@@ -35,17 +35,17 @@ class Python27 < Formula
   skip_clean "bin/easy_install", "bin/easy_install-2.7"
 
   resource "setuptools" do
-    url "https://files.pythonhosted.org/packages/26/d1/dc7fe14ce4a3ff3faebf1ac11350de4104ea2d2a80c98393b55c84362b0c/setuptools-32.1.0.tar.gz"
-    sha256 "86d57bf86edc0ecfd2dc0907ed3710bc4501fb13a06c0fcaf7632305b00ce832"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-33.1.1.zip"
+    sha256 "6b20352ed60ba08c43b3611bdb502286f7a869fbfcf472f40d7279f1e77de145"
   end
 
   resource "pip" do
-    url "https://files.pythonhosted.org/packages/11/b6/abcb525026a4be042b486df43905d6893fb04f05aac21c32c638e939e447/pip-9.0.1.tar.gz"
+    url "https://www.pypi.org/packages/source/p/pip/pip-9.0.1.tar.gz"
     sha256 "09f243e1a7b461f654c26a725fa373211bb7ff17a9300058b205c61658ca940d"
   end
 
   resource "wheel" do
-    url "https://files.pythonhosted.org/packages/c9/1d/bd19e691fd4cfe908c76c429fe6e4436c9e83583c4414b54f6c85471954a/wheel-0.29.0.tar.gz"
+    url "https://pypi.python.org/packages/source/w/wheel/wheel-0.29.0.tar.gz"
     sha256 "1ebb8ad7e26b448e9caa4773d2357849bf80ff9e313964bcaf79cbf0201a1648"
   end
 
