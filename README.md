@@ -1,34 +1,47 @@
 # homebrew-python
 
-This [Homebrew](http://brew.sh) tap provides formulæ to install multiple Python versions.
+This [Homebrew](http://brew.sh) tap provides formulae to install multiple Python versions.
 
-We currently support Python 3.3.6, Python 3.4.6, Python 3.5.3 and Python 3.6.0.
+We currently provide Python 3.3.6, Python 3.4.6, Python 3.5.3 and Python 3.6.1. 
+We support building universal (i.e i386/x86_64) versions of these formulae using [sashkab/universal](https://github.com/sashkab/homebrew-universal) tap.
 
-## How do I install these formulæ?
+## Installing formulae
 
-`brew install sashkab/python/<formula>`
+```bash
+brew install sashkab/python/pythonXY
+```
 
-Or `brew tap sashkab/python` and then `brew install <formula>`.
+Or
 
-## Usage
+```bash
+brew tap sashkab/python
+brew install pythonXY
+```
+
+### Python 3.3
+
+```bash
+brew install sashkab/python/python33  [--universal]
+pip3.3 install -U pip setuptools
+```
 
 ### Python 3.4
 
 ```bash
-$ brew install sashkab/python/python34  [--universal]
-$ pip3.4 install -U pip setuptools
+brew install sashkab/python/python34  [--universal]
+pip3.4 install -U pip setuptools
 ```
 
 ### Python 3.5
 
 ```bash
-$ brew install sashkab/python/python35 [--universal]
-$ pip3.5 install -U pip setuptools
+brew install sashkab/python/python35 [--universal]
+pip3.5 install -U pip setuptools
 ```
 
 ### Python 3.6
 
 ```bash
-$ brew install sashkab/python/python36 [--universal]
-$ pip3.6 install -U pip setuptools
+brew install sashkab/python/python36 [--universal]
+pip3.6 install -U pip setuptools
 ```
