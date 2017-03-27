@@ -5,12 +5,6 @@ class Python27 < Formula
   sha256 "35d543986882f78261f97787fd3e06274bfa6df29fac9b4a94f73930ff98f731"
   head "https://github.com/python/cpython.git", :branch => "2.7"
 
-  bottle do
-    sha256 "c125108285f306af28bb46522ca5a332d9326eddea3cd2015817acd044a3bfb1" => :sierra
-    sha256 "e9cf38579d340f64197808bb607c9a15f020943083d48324fd551316750fcd12" => :el_capitan
-    sha256 "0a0cb3a0f2880f64055eecc74c952c959795b02bcd9f8c1a32cbda3000b147af" => :yosemite
-  end
-
   # Please don't add a wide/ucs4 option as it won't be accepted.
   # More details in: https://github.com/Homebrew/homebrew/pull/32368
   option :universal
