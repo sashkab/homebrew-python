@@ -1,4 +1,4 @@
-class Python < Formula
+class Python27 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org"
   url "https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz"
