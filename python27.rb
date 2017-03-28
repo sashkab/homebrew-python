@@ -253,9 +253,9 @@ class Python27 < Formula
                   "--install-scripts=#{bin}",
                   "--install-lib=#{site_packages}"]
 
-    (libexec/"setuptools").cd { system "#{bin}/python", *setup_args }
-    (libexec/"pip").cd { system "#{bin}/python", *setup_args }
-    (libexec/"wheel").cd { system "#{bin}/python", *setup_args }
+    (libexec/"setuptools").cd { system "#{bin}/python2.7", *setup_args }
+    (libexec/"pip").cd { system "#{bin}/python2.7", *setup_args }
+    (libexec/"wheel").cd { system "#{bin}/python2.7", *setup_args }
 
     # When building from source, these symlinks will not exist, since
     # post_install happens after linking.
@@ -358,9 +358,9 @@ class Python27 < Formula
   test do
     # Check if sqlite is ok, because we build with --enable-loadable-sqlite-extensions
     # and it can occur that building sqlite silently fails if OSX's sqlite is used.
-    system "#{bin}/python", "-c", "import sqlite3"
+    system "#{bin}/python2.7", "-c", "import sqlite3"
     # Check if some other modules import. Then the linked libs are working.
-    system "#{bin}/python", "-c", "import Tkinter; root = Tkinter.Tk()"
+    system "#{bin}/python2.7", "-c", "import Tkinter; root = Tkinter.Tk()"
     system bin/"pip2.7", "list"
   end
 end
