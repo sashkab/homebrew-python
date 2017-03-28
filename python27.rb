@@ -6,7 +6,7 @@ class Python27 < Formula
   head "https://github.com/python/cpython.git", :branch => "2.7"
   revision 2
 
-  conflicts_with "python", :because => "it replaces python formulae." 
+  keg_only "avoiding conflict with Homebrew/core/python."
 
   # Please don't add a wide/ucs4 option as it won't be accepted.
   # More details in: https://github.com/Homebrew/homebrew/pull/32368
@@ -339,16 +339,19 @@ class Python27 < Formula
   end
 
   def caveats; <<-EOS.undent
+    Universal Python 2.7 was installed into /usr/local/opt/python27.
+    It was installed as a keg, i.e without linking into  /usr/local/bin
+    in order to avoid conflicts with the python formulae.
+
+    You can use it to create virtual environment by passing full path
+      virtualenv -p /usr/local/opt/python27/bin/python2.7 <path to venv>
+
     Pip and setuptools have been installed. To update them
-      pip install --upgrade pip setuptools
+      /usr/local/opt/python27/bin/pip2.7 install --upgrade pip setuptools
 
     You can install Python packages with
-      pip install <package>
+      /usr/local/opt/python27/bin/pip2.7 install <package>
 
-    They will install into the site-package directory
-      #{site_packages}
-
-    See: http://docs.brew.sh/Homebrew-and-Python.html
     EOS
   end
 
