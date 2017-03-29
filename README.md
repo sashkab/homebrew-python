@@ -18,6 +18,22 @@ brew tap sashkab/python
 brew install pythonXY
 ```
 
+### Python 2.7
+
+Universal Python 2.7 was installed into `/usr/local/opt/python27`. It was installed as a keg, 
+i.e without linking into `/usr/local/bin` in order to avoid conflicts with the python formulae.
+
+```bash
+brew install sashkab/python/python27  [--universal]
+/usr/local/opt/python27/bin/pip2.7 install -U pip setuptools
+```
+
+You can use it to create a virtual environment by passing full path to the Python executable:
+
+```bash
+virtualenv -p /usr/local/opt/python27/bin/python2.7 <path to venv>
+```
+
 ### Python 3.3
 
 ```bash
