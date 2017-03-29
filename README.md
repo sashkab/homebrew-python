@@ -20,7 +20,7 @@ brew install pythonXY
 
 ### Python 2.7
 
-Universal Python 2.7 was installed into `/usr/local/opt/python27`. It was installed as a keg, 
+Universal Python 2.7 will be installed into `/usr/local/opt/python27`, as a keg,
 i.e without linking into `/usr/local/bin` in order to avoid conflicts with the python formulae.
 
 ```bash
