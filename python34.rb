@@ -19,8 +19,7 @@ class Python34 < Formula
   depends_on "sashkab/universal/ugdbm" => :recommended
   depends_on "sashkab/universal/uopenssl"
   depends_on "sashkab/universal/uxz" => :recommended # for the lzma module added in 3.3
-  depends_on "homebrew/dupes/tcl-tk" => :optional
-  depends_on :x11 if build.with?("tcl-tk") && Tab.for_name("homebrew/dupes/tcl-tk").with?("x11")
+  depends_on "tcl-tk" => :optional
 
   skip_clean "bin/pip3", "bin/pip-3.4"
   skip_clean "bin/easy_install3", "bin/easy_install-3.4"
@@ -216,8 +215,8 @@ class Python34 < Formula
     end
 
     if build.with? "tcl-tk"
-      include_dirs << Formula["homebrew/dupes/tcl-tk"].opt_include
-      library_dirs << Formula["homebrew/dupes/tcl-tk"].opt_lib
+      include_dirs << Formula["tcl-tk"].opt_include
+      library_dirs << Formula["tcl-tk"].opt_lib
     end
 
     cfg = lib_cellar/"distutils/distutils.cfg"
