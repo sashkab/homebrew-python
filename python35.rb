@@ -20,8 +20,7 @@ class Python35 < Formula
   depends_on "sashkab/universal/usqlite" => :recommended
   depends_on "sashkab/universal/ugdbm" => :recommended
   depends_on "sashkab/universal/uopenssl"
-  depends_on "sashkab/universal/uxz" => :recommended # for the lzma module added in 3.3
-  depends_on "homebrew/dupes/tcl-tk" => :optional
+  depends_on "tcl-tk" => :optional
   depends_on :x11 if build.with?("tcl-tk") && Tab.for_name("homebrew/dupes/tcl-tk").with?("x11")
   depends_on "sphinx-doc" => [:build, :optional]
 
@@ -256,8 +255,8 @@ class Python35 < Formula
     end
 
     if build.with? "tcl-tk"
-      include_dirs << Formula["homebrew/dupes/tcl-tk"].opt_include
-      library_dirs << Formula["homebrew/dupes/tcl-tk"].opt_lib
+      include_dirs << Formula["tcl-tk"].opt_include
+      library_dirs << Formula["tcl-tk"].opt_lib
     end
 
     cfg = lib_cellar/"distutils/distutils.cfg"
