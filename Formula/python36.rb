@@ -3,7 +3,7 @@ class Python36 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tar.xz"
   sha256 "a01810ddfcec216bcdb357a84bfaafdfaa0ca42bbdaa4cb7ff74f5a9961e4041"
-  revision 2
+  revision 3
   head "https://github.com/python/cpython", :using => :git
 
   option :universal
