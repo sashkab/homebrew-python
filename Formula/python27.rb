@@ -4,7 +4,7 @@ class Python27 < Formula
   url "https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz"
   sha256 "35d543986882f78261f97787fd3e06274bfa6df29fac9b4a94f73930ff98f731"
   head "https://github.com/python/cpython.git", :branch => "2.7"
-  revision 2
+  revision 3
 
   keg_only "avoiding conflict with Homebrew/core/python."
 

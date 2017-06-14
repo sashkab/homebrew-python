@@ -3,7 +3,7 @@ class Python33 < Formula
   homepage "https://www.python.org/"
   url "http://python.org/ftp/python/3.3.6/Python-3.3.6.tgz"
   sha256 "0a58ad1f1def4ecc90b18b0c410a3a0e1a48cf7692c75d1f83d0af080e5d2034"
-  revision 4
+  revision 5
 
   head "https://hg.python.org/cpython", :using => :hg, :branch => "3.3"
 
