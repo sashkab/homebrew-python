@@ -152,8 +152,8 @@ class Python27 < Formula
     # even if homebrew is not a /usr/local/lib. Try this with:
     # `brew install enchant && pip2 install pyenchant`
     inreplace "./Lib/ctypes/macholib/dyld.py" do |f|
-      f.gsub! "DEFAULT_LIBRARY_FALLBACK = [", "DEFAULT_LIBRARY_FALLBACK = [ '#{HOMEBREW_PREFIX}/lib',"
-      f.gsub! "DEFAULT_FRAMEWORK_FALLBACK = [", "DEFAULT_FRAMEWORK_FALLBACK = [ '#{HOMEBREW_PREFIX}/Frameworks',"
+      f.gsub! "DEFAULT_LIBRARY_FALLBACK = [", "DEFAULT_LIBRARY_FALLBACK = [ '#{prefix}/lib',"
+      f.gsub! "DEFAULT_FRAMEWORK_FALLBACK = [", "DEFAULT_FRAMEWORK_FALLBACK = [ '#{prefix}/Frameworks',"
     end
 
     if build.with? "tcl-tk"
@@ -200,7 +200,7 @@ class Python27 < Formula
                frameworks/"Python.framework/Versions/Current/lib/pkgconfig/python-2.7.pc"],
               prefix, opt_prefix
 
-    # Symlink the pkgconfig files into HOMEBREW_PREFIX so they're accessible.
+    # Symlink the pkgconfig files into prefix so they're accessible.
     (lib/"pkgconfig").install_symlink Dir[frameworks/"Python.framework/Versions/Current/lib/pkgconfig/*"]
 
     # Remove the site-packages that Python created in its Cellar.
@@ -240,7 +240,7 @@ class Python27 < Formula
     # Fix up the site-packages so that user-installed Python software survives
     # minor updates, such as going from 2.7.0 to 2.7.1:
 
-    # Create a site-packages in HOMEBREW_PREFIX/lib/python2.7/site-packages
+    # Create a site-packages in prefix/lib/python2.7/site-packages
     site_packages.mkpath
 
     # Symlink the prefix site-packages into the cellar.
@@ -273,12 +273,12 @@ class Python27 < Formula
     # When building from source, these symlinks will not exist, since
     # post_install happens after linking.
     %w[pip2 pip2.7 easy_install-2.7].each do |e|
-      (HOMEBREW_PREFIX/"bin").install_symlink bin/e
+      (prefix/"bin").install_symlink bin/e
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [HOMEBREW_PREFIX/"include", Formula["openssl"].opt_include]
-    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["openssl"].opt_lib]
+    include_dirs = [prefix/"include", Formula["openssl"].opt_include]
+    library_dirs = [prefix/"lib", Formula["openssl"].opt_lib]
 
     if build.with? "sqlite"
       include_dirs << Formula["sqlite"].opt_include
@@ -293,7 +293,7 @@ class Python27 < Formula
     cfg = lib_cellar/"distutils/distutils.cfg"
     cfg.atomic_write <<-EOF.undent
       [install]
-      prefix=#{HOMEBREW_PREFIX}
+      prefix=#{prefix}
 
       [build_ext]
       include_dirs=#{include_dirs.join ":"}
@@ -331,7 +331,7 @@ class Python27 < Formula
           # .pth files have already been processed so don't use addsitedir
           sys.path.extend(library_packages)
 
-          # the Cellar site-packages is a symlink to the HOMEBREW_PREFIX
+          # the Cellar site-packages is a symlink to the prefix
           # site_packages; prefer the shorter paths
           long_prefix = re.compile(r'#{rack}/[0-9\._abrc]+/Frameworks/Python\.framework/Versions/2\.7/lib/python2\.7/site-packages')
           sys.path = [long_prefix.sub('#{site_packages}', p) for p in sys.path]
@@ -339,7 +339,7 @@ class Python27 < Formula
           # LINKFORSHARED (and python-config --ldflags) return the
           # full path to the lib (yes, "Python" is actually the lib, not a
           # dir) so that third-party software does not need to add the
-          # -F/#{HOMEBREW_PREFIX}/Frameworks switch.
+          # -F/#{prefix}/Frameworks switch.
           try:
               from _sysconfigdata import build_time_vars
               build_time_vars['LINKFORSHARED'] = '-u _PyMac_Error #{opt_prefix}/Frameworks/Python.framework/Versions/2.7/Python'
@@ -358,7 +358,7 @@ class Python27 < Formula
      export PATH="#{opt_bin}:$PATH"
 
     You can use it to create virtual environment by passing full path
-      virtualenv -p #{opt_bin}/bin/python2.7 <path to venv>
+      virtualenv -p #{opt_bin}/python2.7 <path to venv>
 
     Pip and setuptools have been installed. To update them
       #{opt_bin}/pip2 install --upgrade pip setuptools
