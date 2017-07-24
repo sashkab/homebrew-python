@@ -4,7 +4,7 @@ class Python27 < Formula
   url "https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz"
   sha256 "35d543986882f78261f97787fd3e06274bfa6df29fac9b4a94f73930ff98f731"
   head "https://github.com/python/cpython.git", :branch => "2.7"
-  revision 3
+  revision 4
 
   keg_only "avoiding conflict with Homebrew/core/python."
 
@@ -32,9 +32,6 @@ class Python27 < Formula
   depends_on "sashkab/universal/uopenssl"
   depends_on "tcl-tk" => :optional
   depends_on "berkeley-db@4" => :optional
-
-  skip_clean "bin/pip", "bin/pip-2.7"
-  skip_clean "bin/easy_install", "bin/easy_install-2.7"
 
   resource "setuptools" do
     url "https://pypi.org/packages/source/s/setuptools/setuptools-33.1.1.zip"
@@ -68,9 +65,8 @@ class Python27 < Formula
     lib_cellar/"site-packages"
   end
 
-  # The HOMEBREW_PREFIX location of site-packages.
   def site_packages
-    HOMEBREW_PREFIX/"lib/python2.7/site-packages"
+    prefix/"lib/python2.7/site-packages"
   end
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -154,10 +150,10 @@ class Python27 < Formula
 
     # Allow python modules to use ctypes.find_library to find homebrew's stuff
     # even if homebrew is not a /usr/local/lib. Try this with:
-    # `brew install enchant && pip install pyenchant`
+    # `brew install enchant && pip2 install pyenchant`
     inreplace "./Lib/ctypes/macholib/dyld.py" do |f|
-      f.gsub! "DEFAULT_LIBRARY_FALLBACK = [", "DEFAULT_LIBRARY_FALLBACK = [ '#{HOMEBREW_PREFIX}/lib',"
-      f.gsub! "DEFAULT_FRAMEWORK_FALLBACK = [", "DEFAULT_FRAMEWORK_FALLBACK = [ '#{HOMEBREW_PREFIX}/Frameworks',"
+      f.gsub! "DEFAULT_LIBRARY_FALLBACK = [", "DEFAULT_LIBRARY_FALLBACK = [ '#{prefix}/lib',"
+      f.gsub! "DEFAULT_FRAMEWORK_FALLBACK = [", "DEFAULT_FRAMEWORK_FALLBACK = [ '#{prefix}/Frameworks',"
     end
 
     if build.with? "tcl-tk"
@@ -186,7 +182,7 @@ class Python27 < Formula
 
     ENV.deparallelize do
       # Tell Python not to install into /Applications
-      system "make", "altinstall", "PYTHONAPPSDIR=#{prefix}"
+      system "make", "install", "PYTHONAPPSDIR=#{prefix}"
       system "make", "frameworkinstallextras", "PYTHONAPPSDIR=#{pkgshare}"
     end
 
@@ -204,7 +200,7 @@ class Python27 < Formula
                frameworks/"Python.framework/Versions/Current/lib/pkgconfig/python-2.7.pc"],
               prefix, opt_prefix
 
-    # Symlink the pkgconfig files into HOMEBREW_PREFIX so they're accessible.
+    # Symlink the pkgconfig files into prefix so they're accessible.
     (lib/"pkgconfig").install_symlink Dir[frameworks/"Python.framework/Versions/Current/lib/pkgconfig/*"]
 
     # Remove the site-packages that Python created in its Cellar.
@@ -220,13 +216,31 @@ class Python27 < Formula
         doc.install Dir["build/html/*"]
       end
     end
+
+    # Remove commands shadowing system python.
+    {
+      "2to3" => "2to3-2",
+      "easy_install" => "easy_install-2.7",
+      "idle" => "idle2",
+      "pip" => "pip2",
+      "pydoc" => "pydoc2",
+      "python" => "python2",
+      "python-config" => "python2-config",
+      "pythonw" => "pythonw2",
+      "smtpd.py" => "smtpd2.py",
+      "wheel" => nil,
+    }.each do |unversioned_name, versioned_name|
+      rm_f bin/unversioned_name
+      next unless versioned_name
+      (libexec/"bin").install_symlink bin/versioned_name => unversioned_name
+    end
   end
 
   def post_install
     # Fix up the site-packages so that user-installed Python software survives
     # minor updates, such as going from 2.7.0 to 2.7.1:
 
-    # Create a site-packages in HOMEBREW_PREFIX/lib/python2.7/site-packages
+    # Create a site-packages in prefix/lib/python2.7/site-packages
     site_packages.mkpath
 
     # Symlink the prefix site-packages into the cellar.
@@ -252,19 +266,19 @@ class Python27 < Formula
                   "--install-scripts=#{bin}",
                   "--install-lib=#{site_packages}"]
 
-    (libexec/"setuptools").cd { system "#{bin}/python2.7", *setup_args }
-    (libexec/"pip").cd { system "#{bin}/python2.7", *setup_args }
-    (libexec/"wheel").cd { system "#{bin}/python2.7", *setup_args }
+    (libexec/"setuptools").cd { system "#{bin}/python2", *setup_args }
+    (libexec/"pip").cd { system "#{bin}/python2", *setup_args }
+    (libexec/"wheel").cd { system "#{bin}/python2", *setup_args }
 
     # When building from source, these symlinks will not exist, since
     # post_install happens after linking.
-    %w[pip pip2 pip2.7 easy_install easy_install-2.7 wheel].each do |e|
-      (HOMEBREW_PREFIX/"bin").install_symlink bin/e
+    %w[pip2 pip2.7 easy_install-2.7].each do |e|
+      (prefix/"bin").install_symlink bin/e
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [HOMEBREW_PREFIX/"include", Formula["openssl"].opt_include]
-    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["openssl"].opt_lib]
+    include_dirs = [prefix/"include", Formula["openssl"].opt_include]
+    library_dirs = [prefix/"lib", Formula["openssl"].opt_lib]
 
     if build.with? "sqlite"
       include_dirs << Formula["sqlite"].opt_include
@@ -279,7 +293,7 @@ class Python27 < Formula
     cfg = lib_cellar/"distutils/distutils.cfg"
     cfg.atomic_write <<-EOF.undent
       [install]
-      prefix=#{HOMEBREW_PREFIX}
+      prefix=#{prefix}
 
       [build_ext]
       include_dirs=#{include_dirs.join ":"}
@@ -317,7 +331,7 @@ class Python27 < Formula
           # .pth files have already been processed so don't use addsitedir
           sys.path.extend(library_packages)
 
-          # the Cellar site-packages is a symlink to the HOMEBREW_PREFIX
+          # the Cellar site-packages is a symlink to the prefix
           # site_packages; prefer the shorter paths
           long_prefix = re.compile(r'#{rack}/[0-9\._abrc]+/Frameworks/Python\.framework/Versions/2\.7/lib/python2\.7/site-packages')
           sys.path = [long_prefix.sub('#{site_packages}', p) for p in sys.path]
@@ -325,7 +339,7 @@ class Python27 < Formula
           # LINKFORSHARED (and python-config --ldflags) return the
           # full path to the lib (yes, "Python" is actually the lib, not a
           # dir) so that third-party software does not need to add the
-          # -F/#{HOMEBREW_PREFIX}/Frameworks switch.
+          # -F/#{prefix}/Frameworks switch.
           try:
               from _sysconfigdata import build_time_vars
               build_time_vars['LINKFORSHARED'] = '-u _PyMac_Error #{opt_prefix}/Frameworks/Python.framework/Versions/2.7/Python'
@@ -338,28 +352,31 @@ class Python27 < Formula
   end
 
   def caveats; <<-EOS.undent
-    Universal Python 2.7 was installed into /usr/local/opt/python27.
-    It was installed as a keg, i.e without linking into  /usr/local/bin
-    in order to avoid conflicts with the python formulae.
+   This formula installs a universal python2 executable to #{opt_bin}.
+   If you wish to have this formula's python executable in your PATH then add
+   the following to #{shell_profile}:
+     export PATH="#{opt_bin}:$PATH"
 
     You can use it to create virtual environment by passing full path
-      virtualenv -p /usr/local/opt/python27/bin/python2.7 <path to venv>
+      virtualenv -p #{opt_bin}/python2.7 <path to venv>
 
     Pip and setuptools have been installed. To update them
-      /usr/local/opt/python27/bin/pip2.7 install --upgrade pip setuptools
+      #{opt_bin}/pip2 install --upgrade pip setuptools
 
     You can install Python packages with
-      /usr/local/opt/python27/bin/pip2.7 install <package>
+      #{opt_bin}/pip2 install <package>
 
+    They will install into the site-package directory
+      #{site_packages}
     EOS
   end
 
   test do
     # Check if sqlite is ok, because we build with --enable-loadable-sqlite-extensions
     # and it can occur that building sqlite silently fails if OSX's sqlite is used.
-    system "#{bin}/python2.7", "-c", "import sqlite3"
+    system "#{bin}/python2", "-c", "import sqlite3"
     # Check if some other modules import. Then the linked libs are working.
-    system "#{bin}/python2.7", "-c", "import Tkinter; root = Tkinter.Tk()"
-    system bin/"pip2.7", "list"
+    system "#{bin}/python2", "-c", "import Tkinter; root = Tkinter.Tk()"
+    system bin/"pip2", "list"
   end
 end
