@@ -4,7 +4,7 @@ class Python27 < Formula
   url "https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz"
   sha256 "35d543986882f78261f97787fd3e06274bfa6df29fac9b4a94f73930ff98f731"
   head "https://github.com/python/cpython.git", :branch => "2.7"
-  revision 4
+  revision 5
 
   keg_only "avoiding conflict with Homebrew/core/python."
 
@@ -126,8 +126,8 @@ class Python27 < Formula
     # superenv handles that cc finds includes/libs!
     inreplace "setup.py" do |s|
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
-              "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
-      s.gsub! "/usr/local/ssl", Formula["openssl"].opt_prefix
+              "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
+      s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
       s.gsub! "/usr/include/db4", Formula["berkeley-db@4"].opt_include
     end
 
@@ -277,8 +277,8 @@ class Python27 < Formula
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [prefix/"include", Formula["openssl"].opt_include]
-    library_dirs = [prefix/"lib", Formula["openssl"].opt_lib]
+    include_dirs = [prefix/"include", Formula["uopenssl"].opt_include]
+    library_dirs = [prefix/"lib", Formula["uopenssl"].opt_lib]
 
     if build.with? "sqlite"
       include_dirs << Formula["sqlite"].opt_include

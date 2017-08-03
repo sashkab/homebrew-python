@@ -4,7 +4,7 @@ class Python34 < Formula
   url "https://www.python.org/ftp/python/3.4.6/Python-3.4.6.tar.xz"
   sha256 "f13428bbe6aa9e3b9b6499502dc488c26096349ed7a21f7a0c1db90911115f40"
   head "https://hg.python.org/cpython", :using => :hg, :branch => "3.4"
-  revision 3
+  revision 4
 
   option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of OS X Tk (has optional Cocoa and threads support)"
@@ -99,8 +99,8 @@ class Python34 < Formula
     # superenv makes cc always find includes/libs!
     inreplace "setup.py" do |s|
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
-              "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
-      s.gsub! "/usr/local/ssl", Formula["openssl"].opt_prefix
+              "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
+      s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
     end
 
     if build.universal?
@@ -206,8 +206,8 @@ class Python34 < Formula
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [HOMEBREW_PREFIX/"include", Formula["openssl"].opt_include]
-    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["openssl"].opt_lib]
+    include_dirs = [HOMEBREW_PREFIX/"include", Formula["uopenssl"].opt_include]
+    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["uopenssl"].opt_lib]
 
     if build.with? "sqlite"
       include_dirs << Formula["sqlite"].opt_include

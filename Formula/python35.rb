@@ -3,7 +3,7 @@ class Python35 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.5.3/Python-3.5.3.tar.xz"
   sha256 "eefe2ad6575855423ab630f5b51a8ef6e5556f774584c06beab4926f930ddbb0"
-  revision 3
+  revision 4
 
   head "https://hg.python.org/cpython", :using => :hg
 
@@ -118,8 +118,8 @@ class Python35 < Formula
     # superenv makes cc always find includes/libs!
     inreplace "setup.py" do |s|
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
-              "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
-      s.gsub! "/usr/local/ssl", Formula["openssl"].opt_prefix
+              "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
+      s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
     end
 
     if build.universal?
@@ -246,8 +246,8 @@ class Python35 < Formula
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [HOMEBREW_PREFIX/"include", Formula["openssl"].opt_include]
-    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["openssl"].opt_lib]
+    include_dirs = [HOMEBREW_PREFIX/"include", Formula["uopenssl"].opt_include]
+    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["uopenssl"].opt_lib]
 
     if build.with? "sqlite"
       include_dirs << Formula["sqlite"].opt_include
