@@ -1,10 +1,10 @@
 class Python27 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz"
-  sha256 "35d543986882f78261f97787fd3e06274bfa6df29fac9b4a94f73930ff98f731"
+  url "https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tar.xz"
+  sha256 "71ffb26e09e78650e424929b2b457b9c912ac216576e6bd9e7d204ed03296a66"
   head "https://github.com/python/cpython.git", :branch => "2.7"
-  revision 5
+  # revision 0
 
   keg_only "avoiding conflict with Homebrew/core/python."
 
@@ -34,8 +34,8 @@ class Python27 < Formula
   depends_on "berkeley-db@4" => :optional
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-33.1.1.zip"
-    sha256 "6b20352ed60ba08c43b3611bdb502286f7a869fbfcf472f40d7279f1e77de145"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-36.5.0.zip"
+    sha256 "ce2007c1cea3359870b80657d634253a0765b0c7dc5a988d77ba803fc86f2c64"
   end
 
   resource "pip" do
@@ -44,8 +44,8 @@ class Python27 < Formula
   end
 
   resource "wheel" do
-    url "https://pypi.python.org/packages/source/w/wheel/wheel-0.29.0.tar.gz"
-    sha256 "1ebb8ad7e26b448e9caa4773d2357849bf80ff9e313964bcaf79cbf0201a1648"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.30.0.tar.gz"
+    sha256 "9515fe0a94e823fd90b08d22de45d7bde57c90edce705b22f5e1ecf7e1b653c8"
   end
 
   # Patch to disable the search for Tk.framework, since Homebrew's Tk is
