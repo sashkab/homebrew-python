@@ -1,6 +1,6 @@
 # homebrew-python
 
-This [Homebrew](http://brew.sh) tap provides formulae to install multiple [universal] Python versions. It currently provides Python 2.7.13, Python 3.3.6, Python 3.4.6, Python 3.5.3 and Python 3.6.2. For building universal (i.e i386/x86_64) formulae it uses [sashkab/universal](https://github.com/sashkab/homebrew-universal) tap.
+This [Homebrew](http://brew.sh) tap provides formulae to install multiple [universal] Python versions. It currently provides Python 2.7.14, Python 3.3.6, Python 3.4.6, Python 3.5.3 and Python 3.6.2. For building universal (i.e i386/x86_64) formulae it uses [sashkab/universal](https://github.com/sashkab/homebrew-universal) tap.
 
 ## Installing formulae
 
