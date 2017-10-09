@@ -1,9 +1,14 @@
 class Python36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tar.xz"
-  sha256 "9229773be41ed144370f47f0f626a1579931f5a390f1e8e3853174d52edd64a9"
+  url "https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz"
+  sha256 "cda7d967c9a4bfa52337cdf551bcc5cff026b6ac50a8834e568ce4a794ca81da"
   head "https://github.com/python/cpython", :using => :git
+
+  devel do
+    url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0a1.tar.xz"
+    sha256 "aab053dc3c23b829c60e973ce5972c4e58ffb5e26210acc26611e0d766a06eea"
+  end
 
   option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"
@@ -26,8 +31,8 @@ class Python36 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-33.1.1.zip"
-    sha256 "6b20352ed60ba08c43b3611bdb502286f7a869fbfcf472f40d7279f1e77de145"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-36.5.0.zip"
+    sha256 "ce2007c1cea3359870b80657d634253a0765b0c7dc5a988d77ba803fc86f2c64"
   end
 
   resource "pip" do
@@ -36,8 +41,8 @@ class Python36 < Formula
   end
 
   resource "wheel" do
-    url "https://pypi.python.org/packages/source/w/wheel/wheel-0.29.0.tar.gz"
-    sha256 "1ebb8ad7e26b448e9caa4773d2357849bf80ff9e313964bcaf79cbf0201a1648"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.30.0.tar.gz"
+    sha256 "9515fe0a94e823fd90b08d22de45d7bde57c90edce705b22f5e1ecf7e1b653c8"
   end
 
   fails_with :clang do
