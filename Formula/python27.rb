@@ -291,7 +291,7 @@ class Python27 < Formula
     end
 
     cfg = lib_cellar/"distutils/distutils.cfg"
-    cfg.atomic_write <<~EOF
+    cfg.atomic_write <<~EOS
       [install]
       prefix=#{prefix}
 
@@ -302,7 +302,7 @@ class Python27 < Formula
   end
 
   def sitecustomize
-    <<~EOF
+    <<~EOS
       # This file is created by Homebrew and is executed on each python startup.
       # Don't print from here, or else python command line scripts may fail!
       # <https://docs.brew.sh/Homebrew-and-Python.html>

@@ -220,7 +220,7 @@ class Python34 < Formula
     end
 
     cfg = lib_cellar/"distutils/distutils.cfg"
-    cfg.atomic_write <<~EOF
+    cfg.atomic_write <<~EOS
       [install]
       prefix=#{HOMEBREW_PREFIX}
 
@@ -273,7 +273,7 @@ class Python34 < Formula
   end
 
   def caveats
-    text = <<~EOF
+    text = <<~EOS
       Pip and setuptools have been installed. To update them
         pip3.4 install --upgrade pip setuptools
 
@@ -287,7 +287,7 @@ class Python34 < Formula
     EOS
 
     # Tk warning only for 10.6
-    tk_caveats = <<~EOF
+    tk_caveats = <<~EOS
 
       Apple's Tcl/Tk is not recommended for use with Python on Mac OS X 10.6.
       For more information see: https://www.python.org/download/mac/tcltk/
