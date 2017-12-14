@@ -274,7 +274,7 @@ class Python36 < Formula
       [build_ext]
       include_dirs=#{include_dirs.join ":"}
       library_dirs=#{library_dirs.join ":"}
-    EOF
+    EOS
   end
 
   def sitecustomize
@@ -314,7 +314,7 @@ class Python36 < Formula
 
           # Set the sys.executable to use the opt_prefix
           sys.executable = '#{opt_bin}/python#{xy}'
-    EOF
+    EOS
   end
 
   def caveats
