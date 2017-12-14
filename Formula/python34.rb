@@ -229,7 +229,7 @@ class Python34 < Formula
       [build_ext]
       include_dirs=#{include_dirs.join ":"}
       library_dirs=#{library_dirs.join ":"}
-    EOF
+    EOS
   end
 
   def xy
@@ -237,7 +237,7 @@ class Python34 < Formula
   end
 
   def sitecustomize
-    <<-EOF.undent
+    <<~EOS
       # This file is created by Homebrew and is executed on each python startup.
       # Don't print from here, or else python command line scripts may fail!
       # <https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Homebrew-and-Python.md>
@@ -271,7 +271,7 @@ class Python34 < Formula
 
           # Set the sys.executable to use the opt_prefix
           sys.executable = '#{opt_bin}/python#{xy}'
-    EOF
+    EOS
   end
 
   def caveats
