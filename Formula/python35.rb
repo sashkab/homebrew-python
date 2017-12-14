@@ -3,9 +3,10 @@ class Python35 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.5.3/Python-3.5.3.tar.xz"
   sha256 "eefe2ad6575855423ab630f5b51a8ef6e5556f774584c06beab4926f930ddbb0"
-  revision 4
-
   head "https://hg.python.org/cpython", :using => :hg
+  revision 5
+
+  keg_only "avoiding conflict with Homebrew/core/python3."
 
   option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"

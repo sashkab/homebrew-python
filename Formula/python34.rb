@@ -4,7 +4,9 @@ class Python34 < Formula
   url "https://www.python.org/ftp/python/3.4.6/Python-3.4.6.tar.xz"
   sha256 "f13428bbe6aa9e3b9b6499502dc488c26096349ed7a21f7a0c1db90911115f40"
   head "https://hg.python.org/cpython", :using => :hg, :branch => "3.4"
-  revision 4
+  revision 5
+
+  keg_only "avoiding conflict with Homebrew/core/python3."
 
   option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of OS X Tk (has optional Cocoa and threads support)"
