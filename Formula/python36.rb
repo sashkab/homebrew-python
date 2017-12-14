@@ -4,6 +4,9 @@ class Python36 < Formula
   url "https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tar.xz"
   sha256 "cda7d967c9a4bfa52337cdf551bcc5cff026b6ac50a8834e568ce4a794ca81da"
   head "https://github.com/python/cpython", :using => :git
+  revision 1
+
+  keg_only "avoiding conflict with Homebrew/core/python3."
 
   devel do
     url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0a2.tar.xz"
