@@ -4,7 +4,7 @@ class Python27 < Formula
   url "https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tar.xz"
   sha256 "71ffb26e09e78650e424929b2b457b9c912ac216576e6bd9e7d204ed03296a66"
   head "https://github.com/python/cpython.git", :branch => "2.7"
-  # revision 0
+  revision 2
 
   keg_only "avoiding conflict with Homebrew/core/python."
 
@@ -377,6 +377,7 @@ class Python27 < Formula
     system "#{bin}/python2", "-c", "import sqlite3"
     # Check if some other modules import. Then the linked libs are working.
     system "#{bin}/python2", "-c", "import Tkinter; root = Tkinter.Tk()"
+    system "#{bin}/python2", "-c", "import gdbm"
     system bin/"pip2", "list"
   end
 end
