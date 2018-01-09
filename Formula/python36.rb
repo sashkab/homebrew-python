@@ -9,8 +9,8 @@ class Python36 < Formula
   keg_only "avoiding conflict with Homebrew/core/python3."
 
   devel do
-    url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0a3.tar.xz"
-    sha256 "3432d3ddf97483339badda961f7d0564595460fee166dd8f106dc4201e68446e"
+    url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0a4.tar.xz"
+    sha256 "7e9894b8a353284cb00d61f2080c6357c31c89687f714d209d3f018cfd0b4159"
   end
 
   option :universal
