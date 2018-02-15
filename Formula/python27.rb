@@ -4,7 +4,7 @@ class Python27 < Formula
   url "https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tar.xz"
   sha256 "71ffb26e09e78650e424929b2b457b9c912ac216576e6bd9e7d204ed03296a66"
   head "https://github.com/python/cpython.git", :branch => "2.7"
-  revision 2
+  revision 3
 
   keg_only "avoiding conflict with Homebrew/core/python."
 
@@ -100,6 +100,15 @@ class Python27 < Formula
       --enable-framework=#{frameworks}
       --without-ensurepip
     ]
+
+    # See upstream bug report from 22 Jan 2018 "Significant performance problems
+    # with Python 2.7 built with clang 3.x or 4.x"
+    # https://bugs.python.org/issue32616
+    # https://github.com/Homebrew/homebrew-core/issues/22743
+    if DevelopmentTools.clang_build_version >= 802 &&
+       DevelopmentTools.clang_build_version < 1000
+      args << "--without-computed-gotos"
+    end
 
     args << "--without-gcc" if ENV.compiler == :clang
 
