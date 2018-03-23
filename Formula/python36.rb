@@ -4,9 +4,9 @@ class Python36 < Formula
   url "https://www.python.org/ftp/python/3.6.4/Python-3.6.4.tar.xz"
   sha256 "159b932bf56aeaa76fd66e7420522d8c8853d486b8567c459b84fe2ed13bcaba"
   head "https://github.com/python/cpython", :using => :git
-  revision 2
+  revision 4
 
-  keg_only "avoiding conflict with Homebrew/core/python3."
+  keg_only :versioned_formula
 
   devel do
     url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0a4.tar.xz"
@@ -14,33 +14,30 @@ class Python36 < Formula
   end
 
   option :universal
-  option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"
-  option "with-quicktest", "Run `make quicktest` after the build"
-  option "with-sphinx-doc", "Build HTML documentation"
 
-  deprecated_option "quicktest" => "with-quicktest"
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
-  depends_on "sashkab/universal/ureadline" => :recommended
-  depends_on "sashkab/universal/usqlite" => :recommended
-  depends_on "sashkab/universal/ugdbm" => :recommended
+  depends_on "sphinx-doc" => :build
+  depends_on "sashkab/universal/ugdbm"
   depends_on "sashkab/universal/uopenssl"
-  depends_on "sashkab/universal/uxz" => :recommended # for the lzma module added in 3.3
+  depends_on "sashkab/universal/ureadline"
+  depends_on "sashkab/universal/usqlite"
+  depends_on "sashkab/universal/uxz"
   depends_on "tcl-tk" => :optional
-  depends_on "sphinx-doc" => [:build, :optional]
+
 
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6"
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-36.5.0.zip"
-    sha256 "ce2007c1cea3359870b80657d634253a0765b0c7dc5a988d77ba803fc86f2c64"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.0.1.zip"
+    sha256 "bec7badf0f60e7fc8153fac47836edc41b74e5d541d7692e614e635720d6a7c7"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-9.0.1.tar.gz"
-    sha256 "09f243e1a7b461f654c26a725fa373211bb7ff17a9300058b205c61658ca940d"
+    url "https://www.pypi.org/packages/source/p/pip/pip-9.0.3.tar.gz"
+    sha256 "7bf48f9a693be1d58f49f7af7e0ae9fe29fd671cde8a55e6edca3581c4ef5796"
   end
 
   resource "wheel" do
@@ -86,12 +83,12 @@ class Python36 < Formula
       --datarootdir=#{share}
       --datadir=#{share}
       --enable-framework=#{frameworks}
+      --enable-loadable-sqlite-extensions
       --without-ensurepip
       --with-dtrace
     ]
 
     args << "--without-gcc" if ENV.compiler == :clang
-    args << "--enable-loadable-sqlite-extensions" if build.with?("sqlite")
 
     cflags   = []
     ldflags  = []
@@ -124,12 +121,10 @@ class Python36 < Formula
       args << "--enable-universalsdk" << "--with-universal-archs=intel"
     end
 
-    if build.with? "sqlite"
-      inreplace "setup.py" do |s|
-        s.gsub! "sqlite_setup_debug = False", "sqlite_setup_debug = True"
-        s.gsub! "for d_ in inc_dirs + sqlite_inc_paths:",
-                "for d_ in ['#{Formula["sqlite"].opt_include}']:"
-      end
+    inreplace "setup.py" do |s|
+      s.gsub! "sqlite_setup_debug = False", "sqlite_setup_debug = True"
+      s.gsub! "for d_ in inc_dirs + sqlite_inc_paths:",
+              "for d_ in ['#{Formula["usqlite"].opt_include}']:"
     end
 
     # Allow python modules to use ctypes.find_library to find homebrew's stuff
@@ -153,9 +148,6 @@ class Python36 < Formula
     system "./configure", *args
 
     system "make"
-    if build.with?("quicktest")
-      system "make", "quicktest", "TESTPYTHONOPTS=-s", "TESTOPTS=-j#{ENV.make_jobs} -w"
-    end
 
     ENV.deparallelize do
       # Tell Python not to install into /Applications (default for framework builds)
@@ -201,11 +193,9 @@ class Python36 < Formula
       (libexec/r).install resource(r)
     end
 
-    if build.with? "sphinx-doc"
-      cd "Doc" do
-        system "make", "html"
-        doc.install Dir["build/html/*"]
-      end
+    cd "Doc" do
+      system "make", "html"
+      doc.install Dir["build/html/*"]
     end
   end
 
@@ -251,18 +241,29 @@ class Python36 < Formula
     rm_rf [bin/"pip", bin/"easy_install"]
     mv bin/"wheel", bin/"wheel3"
 
+    # Install unversioned symlinks in libexec/bin.
+    {
+      "easy_install" => "easy_install-#{xy}",
+      "pip" => "pip3",
+      "wheel" => "wheel3",
+    }.each do |unversioned_name, versioned_name|
+      (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
+    end
+
     # post_install happens after link
     %W[pip3.6 pip#{xy} easy_install-#{xy} wheel3].each do |e|
       (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [HOMEBREW_PREFIX/"include", Formula["uopenssl"].opt_include]
-    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["uopenssl"].opt_lib]
+    include_dirs = [HOMEBREW_PREFIX/"include", Formula["uopenssl"].opt_include,
+                    Formula["sqlite"].opt_include]
+    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["uopenssl"].opt_lib,
+                    Formula["sqlite"].opt_lib]
 
     if build.with? "sqlite"
-      include_dirs << Formula["sqlite"].opt_include
-      library_dirs << Formula["sqlite"].opt_lib
+      include_dirs << Formula["usqlite"].opt_include
+      library_dirs << Formula["usqlite"].opt_lib
     end
 
     if build.with? "tcl-tk"
@@ -353,7 +354,7 @@ class Python36 < Formula
   end
 
   test do
-    xy = (prefix/"Frameworks/Python.framework/Versions").children.first.basename.to_s
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.sort.first.basename.to_s
     # Check if sqlite is ok, because we build with --enable-loadable-sqlite-extensions
     # and it can occur that building sqlite silently fails if OSX's sqlite is used.
     system "#{bin}/python#{xy}", "-c", "import sqlite3"
