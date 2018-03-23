@@ -4,43 +4,33 @@ class Python27 < Formula
   url "https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tar.xz"
   sha256 "71ffb26e09e78650e424929b2b457b9c912ac216576e6bd9e7d204ed03296a66"
   head "https://github.com/python/cpython.git", :branch => "2.7"
-  revision 3
+  revision 4
 
-  keg_only "avoiding conflict with Homebrew/core/python."
+  keg_only :versioned_formula
 
   # Please don't add a wide/ucs4 option as it won't be accepted.
   # More details in: https://github.com/Homebrew/homebrew/pull/32368
   option :universal
-  option "with-quicktest", "Run `make quicktest` after the build (for devs; may fail)"
   option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"
-  option "with-poll", "Enable select.poll, which is not fully implemented on macOS (https://bugs.python.org/issue5154)"
 
-  # sphinx-doc depends on python, but on 10.6 or earlier python is fulfilled by
-  # brew, which would lead to circular dependency.
-  if MacOS.version > :snow_leopard
-    option "with-sphinx-doc", "Build HTML documentation"
-    depends_on "sphinx-doc" => [:build, :optional]
-  end
-
-  deprecated_option "quicktest" => "with-quicktest"
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
-  depends_on "sashkab/universal/ureadline" => :recommended
-  depends_on "sashkab/universal/usqlite" => :recommended
-  depends_on "sashkab/universal/ugdbm" => :recommended
+  depends_on "sphinx-doc" => :build if MacOS.version > :snow_leopard
+  depends_on "sashkab/universal/ugdbm"
   depends_on "sashkab/universal/uopenssl"
+  depends_on "sashkab/universal/ureadline"
+  depends_on "sashkab/universal/usqlite"
   depends_on "tcl-tk" => :optional
-  depends_on "berkeley-db@4" => :optional
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-36.5.0.zip"
-    sha256 "ce2007c1cea3359870b80657d634253a0765b0c7dc5a988d77ba803fc86f2c64"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.0.1.zip"
+    sha256 "bec7badf0f60e7fc8153fac47836edc41b74e5d541d7692e614e635720d6a7c7"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-9.0.1.tar.gz"
-    sha256 "09f243e1a7b461f654c26a725fa373211bb7ff17a9300058b205c61658ca940d"
+    url "https://www.pypi.org/packages/source/p/pip/pip-9.0.3.tar.gz"
+    sha256 "7bf48f9a693be1d58f49f7af7e0ae9fe29fd671cde8a55e6edca3581c4ef5796"
   end
 
   resource "wheel" do
@@ -82,10 +72,6 @@ class Python27 < Formula
 
   def install
     ENV.permit_weak_imports
-
-    if build.with? "poll"
-      opoo "The given option --with-poll enables a somewhat broken poll() on macOS (https://bugs.python.org/issue5154)."
-    end
 
     # Unset these so that installing pip and setuptools puts them where we want
     # and not into some other Python the user has installed.
@@ -137,7 +123,6 @@ class Python27 < Formula
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
               "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
       s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
-      s.gsub! "/usr/include/db4", Formula["berkeley-db@4"].opt_include
     end
 
     if build.universal?
@@ -145,16 +130,14 @@ class Python27 < Formula
       args << "--enable-universalsdk=/" << "--with-universal-archs=intel"
     end
 
-    if build.with? "sqlite"
-      inreplace "setup.py" do |s|
-        s.gsub! "sqlite_setup_debug = False", "sqlite_setup_debug = True"
-        s.gsub! "for d_ in inc_dirs + sqlite_inc_paths:",
-                "for d_ in ['#{Formula["sqlite"].opt_include}']:"
+    inreplace "setup.py" do |s|
+      s.gsub! "sqlite_setup_debug = False", "sqlite_setup_debug = True"
+      s.gsub! "for d_ in inc_dirs + sqlite_inc_paths:",
+              "for d_ in ['#{Formula["sqlite"].opt_include}']:"
 
-        # Allow sqlite3 module to load extensions:
-        # https://docs.python.org/library/sqlite3.html#f1
-        s.gsub! 'sqlite_defines.append(("SQLITE_OMIT_LOAD_EXTENSION", "1"))', ""
-      end
+      # Allow sqlite3 module to load extensions:
+      # https://docs.python.org/library/sqlite3.html#f1
+      s.gsub! 'sqlite_defines.append(("SQLITE_OMIT_LOAD_EXTENSION", "1"))', ""
     end
 
     # Allow python modules to use ctypes.find_library to find homebrew's stuff
@@ -177,17 +160,7 @@ class Python27 < Formula
 
     system "./configure", *args
 
-    # HAVE_POLL is "broken" on macOS. See:
-    # https://trac.macports.org/ticket/18376
-    # https://bugs.python.org/issue5154
-    if build.without? "poll"
-      inreplace "pyconfig.h", /.*?(HAVE_POLL[_A-Z]*).*/, '#undef \1'
-    end
-
     system "make"
-    if build.with?("quicktest") || build.bottle?
-      system "make", "quicktest", "TESTPYTHONOPTS=-s", "TESTOPTS=-j#{ENV.make_jobs} -w"
-    end
 
     ENV.deparallelize do
       # Tell Python not to install into /Applications
@@ -219,30 +192,13 @@ class Python27 < Formula
     (libexec/"pip").install resource("pip")
     (libexec/"wheel").install resource("wheel")
 
-    if MacOS.version > :snow_leopard && build.with?("sphinx-doc")
+    if MacOS.version > :snow_leopard
       cd "Doc" do
         system "make", "html"
         doc.install Dir["build/html/*"]
       end
     end
 
-    # Remove commands shadowing system python.
-    {
-      "2to3" => "2to3-2",
-      "easy_install" => "easy_install-2.7",
-      "idle" => "idle2",
-      "pip" => "pip2",
-      "pydoc" => "pydoc2",
-      "python" => "python2",
-      "python-config" => "python2-config",
-      "pythonw" => "pythonw2",
-      "smtpd.py" => "smtpd2.py",
-      "wheel" => nil,
-    }.each do |unversioned_name, versioned_name|
-      rm_f bin/unversioned_name
-      next unless versioned_name
-      (libexec/"bin").install_symlink bin/versioned_name => unversioned_name
-    end
   end
 
   def post_install
@@ -275,24 +231,22 @@ class Python27 < Formula
                   "--install-scripts=#{bin}",
                   "--install-lib=#{site_packages}"]
 
-    (libexec/"setuptools").cd { system "#{bin}/python2", *setup_args }
-    (libexec/"pip").cd { system "#{bin}/python2", *setup_args }
-    (libexec/"wheel").cd { system "#{bin}/python2", *setup_args }
+
+    (libexec/"setuptools").cd { system "#{bin}/python", *setup_args }
+    (libexec/"pip").cd { system "#{bin}/python", *setup_args }
+    (libexec/"wheel").cd { system "#{bin}/python", *setup_args }
 
     # When building from source, these symlinks will not exist, since
     # post_install happens after linking.
-    %w[pip2 pip2.7 easy_install-2.7].each do |e|
+    %w[pip pip2 pip2.7 easy_install easy_install-2.7 wheel].each do |e|
       (prefix/"bin").install_symlink bin/e
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [prefix/"include", Formula["uopenssl"].opt_include]
-    library_dirs = [prefix/"lib", Formula["uopenssl"].opt_lib]
-
-    if build.with? "sqlite"
-      include_dirs << Formula["sqlite"].opt_include
-      library_dirs << Formula["sqlite"].opt_lib
-    end
+    include_dirs = [prefix/"include", Formula["uopenssl"].opt_include,
+                    Formula["usqlite"].opt_include]
+    library_dirs = [prefix/"lib", Formula["uopenssl"].opt_lib,
+                    Formula["usqlite"].opt_include]
 
     if build.with? "tcl-tk"
       include_dirs << Formula["tcl-tk"].opt_include
@@ -314,7 +268,7 @@ class Python27 < Formula
     <<~EOS
       # This file is created by Homebrew and is executed on each python startup.
       # Don't print from here, or else python command line scripts may fail!
-      # <https://docs.brew.sh/Homebrew-and-Python.html>
+      # <https://docs.brew.sh/Homebrew-and-Python>
       import re
       import os
       import sys
@@ -360,33 +314,37 @@ class Python27 < Formula
     EOS
   end
 
-  def caveats; <<~EOS
-   This formula installs a universal python2 executable to #{opt_bin}.
-   If you wish to have this formula's python executable in your PATH then add
-   the following to #{shell_profile}:
-     export PATH="#{opt_bin}:$PATH"
+ def caveats
+    <<~EOS
+      This formula installs a universal python executable to #{opt_bin}.
+      If you wish to have this formula's `python`, `python-config`, `pip` etc.
+      executables in your PATH then add the following to #{shell_profile}:
+        export PATH="#{opt_bin}:$PATH"
 
-    You can use it to create virtual environment by passing full path
-      virtualenv -p #{opt_bin}/python2.7 <path to venv>
+      If you wish to have this formula's `python` executable in your PATH then add
+      the following to #{shell_profile}:
+        export PATH="#{opt_libexec}/bin:$PATH"
 
-    Pip and setuptools have been installed. To update them
-      #{opt_bin}/pip2 install --upgrade pip setuptools
+      Pip and setuptools have been installed. To update them run
+        #{opt_bin}/pip install --upgrade pip setuptools
 
-    You can install Python packages with
-      #{opt_bin}/pip2 install <package>
+      You can install Python packages with
+        #{opt_bin}/pip install <package>
 
-    They will install into the site-package directory
-      #{site_packages}
+      They will install into the site-package directory
+        #{site_packages}
+
+    See: https://docs.brew.sh/Homebrew-and-Python
     EOS
   end
 
   test do
     # Check if sqlite is ok, because we build with --enable-loadable-sqlite-extensions
     # and it can occur that building sqlite silently fails if OSX's sqlite is used.
-    system "#{bin}/python2", "-c", "import sqlite3"
+    system "#{bin}/python", "-c", "import sqlite3"
     # Check if some other modules import. Then the linked libs are working.
-    system "#{bin}/python2", "-c", "import Tkinter; root = Tkinter.Tk()"
-    system "#{bin}/python2", "-c", "import gdbm"
-    system bin/"pip2", "list"
+    system "#{bin}/python", "-c", "import Tkinter; root = Tkinter.Tk()"
+    system "#{bin}/python", "-c", "import gdbm"
+    system bin/"pip", "list"
   end
 end
