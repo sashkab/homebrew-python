@@ -360,23 +360,27 @@ class Python27 < Formula
     EOS
   end
 
-  def caveats; <<~EOS
-   This formula installs a universal python2 executable to #{opt_bin}.
-   If you wish to have this formula's python executable in your PATH then add
-   the following to #{shell_profile}:
-     export PATH="#{opt_bin}:$PATH"
+ def caveats
+    <<~EOS
+      This formula installs a universal python2 executable to #{opt_bin}.
+      If you wish to have this formula's `python2`, `python2-config`, `pip2` etc.
+      executables in your PATH then add the following to #{shell_profile}:
+        export PATH="#{opt_bin}:$PATH"
 
-    You can use it to create virtual environment by passing full path
-      virtualenv -p #{opt_bin}/python2.7 <path to venv>
+      If you wish to have this formula's `python` executable in your PATH then add
+      the following to #{shell_profile}:
+        export PATH="#{opt_libexec}/bin:$PATH"
 
-    Pip and setuptools have been installed. To update them
-      #{opt_bin}/pip2 install --upgrade pip setuptools
+      Pip and setuptools have been installed. To update them run
+        #{opt_bin}/pip2 install --upgrade pip setuptools
 
-    You can install Python packages with
-      #{opt_bin}/pip2 install <package>
+      You can install Python packages with
+        #{opt_bin}/pip2 install <package>
 
-    They will install into the site-package directory
-      #{site_packages}
+      They will install into the site-package directory
+        #{site_packages}
+
+      See: https://docs.brew.sh/Homebrew-and-Python
     EOS
   end
 
