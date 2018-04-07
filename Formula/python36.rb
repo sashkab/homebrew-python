@@ -1,16 +1,16 @@
 class Python36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.6.4/Python-3.6.4.tar.xz"
-  sha256 "159b932bf56aeaa76fd66e7420522d8c8853d486b8567c459b84fe2ed13bcaba"
+  url "https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz"
+  sha256 "f434053ba1b5c8a5cc597e966ead3c5143012af827fd3f0697d21450bb8d87a6"
   head "https://github.com/python/cpython", :using => :git
-  revision 4
+  # revision 1
 
   keg_only :versioned_formula
 
   devel do
-    url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0a4.tar.xz"
-    sha256 "7e9894b8a353284cb00d61f2080c6357c31c89687f714d209d3f018cfd0b4159"
+    url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0b3.tar.xz"
+    sha256 "2b152788486c61ee6c3e9feaeb4c3fe9679f0a76a19a4c82eb4c665989c340fb"
   end
 
   option :universal
