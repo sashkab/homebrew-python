@@ -9,8 +9,8 @@ class Python36 < Formula
   keg_only :versioned_formula
 
   devel do
-    url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0b3.tar.xz"
-    sha256 "2b152788486c61ee6c3e9feaeb4c3fe9679f0a76a19a4c82eb4c665989c340fb"
+    url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0b5.tar.xz"
+    sha256 "00e4d85ebd5392f75e979b4cf860b1711642d62fbdd38e0874355b0245185313"
   end
 
   option :universal
@@ -31,18 +31,18 @@ class Python36 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.0.1.zip"
-    sha256 "bec7badf0f60e7fc8153fac47836edc41b74e5d541d7692e614e635720d6a7c7"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.1.0.zip"
+    sha256 "c5484e13b89927b44fd15897f7ce19dded8e7f035466a4fa7b946c0bdd86edd7"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-9.0.3.tar.gz"
-    sha256 "7bf48f9a693be1d58f49f7af7e0ae9fe29fd671cde8a55e6edca3581c4ef5796"
+    url "https://www.pypi.org/packages/source/p/pip/pip-10.0.1.tar.gz"
+    sha256 "f2bd08e0cd1b06e10218feaf6fef299f473ba706582eb3bd9d52203fdbd7ee68"
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.30.0.tar.gz"
-    sha256 "9515fe0a94e823fd90b08d22de45d7bde57c90edce705b22f5e1ecf7e1b653c8"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.0.tar.gz"
+    sha256 "1ae8153bed701cb062913b72429bcf854ba824f973735427681882a688cb55ce"
   end
 
   fails_with :clang do
@@ -202,7 +202,7 @@ class Python36 < Formula
   def post_install
     ENV.delete "PYTHONPATH"
 
-    xy = (prefix/"Frameworks/Python.framework/Versions").children.sort.first.basename.to_s
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
     site_packages = HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"
     site_packages_cellar = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/site-packages"
 
@@ -284,7 +284,7 @@ class Python36 < Formula
   end
 
   def sitecustomize
-    xy = (prefix/"Frameworks/Python.framework/Versions").children.sort.first.basename.to_s
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
 
     <<~EOS
       # This file is created by Homebrew and is executed on each python startup.
@@ -325,7 +325,7 @@ class Python36 < Formula
 
   def caveats
     if prefix.exist?
-      xy = (prefix/"Frameworks/Python.framework/Versions").children.sort.first.basename.to_s
+      xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
     else
       xy = version.to_s.slice(/(3\.\d)/) || "3.6"
     end
@@ -354,7 +354,7 @@ class Python36 < Formula
   end
 
   test do
-    xy = (prefix/"Frameworks/Python.framework/Versions").children.sort.first.basename.to_s
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
     # Check if sqlite is ok, because we build with --enable-loadable-sqlite-extensions
     # and it can occur that building sqlite silently fails if OSX's sqlite is used.
     system "#{bin}/python#{xy}", "-c", "import sqlite3"

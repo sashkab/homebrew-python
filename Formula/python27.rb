@@ -1,10 +1,9 @@
 class Python27 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/2.7.14/Python-2.7.14.tar.xz"
-  sha256 "71ffb26e09e78650e424929b2b457b9c912ac216576e6bd9e7d204ed03296a66"
+  url "https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tar.xz"
+  sha256 "22d9b1ac5b26135ad2b8c2901a9413537e08749a753356ee913c84dbd2df5574"
   head "https://github.com/python/cpython.git", :branch => "2.7"
-  revision 4
 
   keg_only :versioned_formula
 
@@ -24,18 +23,18 @@ class Python27 < Formula
   depends_on "tcl-tk" => :optional
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.0.1.zip"
-    sha256 "bec7badf0f60e7fc8153fac47836edc41b74e5d541d7692e614e635720d6a7c7"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.1.0.zip"
+    sha256 "c5484e13b89927b44fd15897f7ce19dded8e7f035466a4fa7b946c0bdd86edd7"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-9.0.3.tar.gz"
-    sha256 "7bf48f9a693be1d58f49f7af7e0ae9fe29fd671cde8a55e6edca3581c4ef5796"
+    url "https://www.pypi.org/packages/source/p/pip/pip-10.0.1.tar.gz"
+    sha256 "f2bd08e0cd1b06e10218feaf6fef299f473ba706582eb3bd9d52203fdbd7ee68"
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.30.0.tar.gz"
-    sha256 "9515fe0a94e823fd90b08d22de45d7bde57c90edce705b22f5e1ecf7e1b653c8"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.0.tar.gz"
+    sha256 "1ae8153bed701cb062913b72429bcf854ba824f973735427681882a688cb55ce"
   end
 
   # Patch to disable the search for Tk.framework, since Homebrew's Tk is
@@ -92,7 +91,7 @@ class Python27 < Formula
     # https://bugs.python.org/issue32616
     # https://github.com/Homebrew/homebrew-core/issues/22743
     if DevelopmentTools.clang_build_version >= 802 &&
-       DevelopmentTools.clang_build_version < 1000
+       DevelopmentTools.clang_build_version < 902
       args << "--without-computed-gotos"
     end
 
