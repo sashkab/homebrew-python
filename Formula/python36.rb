@@ -1,14 +1,16 @@
 class Python36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz"
-  sha256 "f434053ba1b5c8a5cc597e966ead3c5143012af827fd3f0697d21450bb8d87a6"
-  head "https://github.com/python/cpython", :using => :git
-  # revision 1
+  url "https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tar.xz"
+  sha256 "d79bc15d456e73a3173a2938f18a17e5149c850ebdedf84a78067f501ee6e16f"
 
-  devel do
-    url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0b5.tar.xz"
-    sha256 "00e4d85ebd5392f75e979b4cf860b1711642d62fbdd38e0874355b0245185313"
+  head do
+    url "https://github.com/python/cpython.git"
+
+    resource "blurb" do
+      url "https://pypi.org/packages/source/b/blurb/blurb-1.0.6.tar.gz"
+      sha256 "90c7d2e5d141d7d1fc6ca0fe660025317ac81ca078e6045c46b1bc5a675ce5d1"
+    end
   end
 
   keg_only :versioned_formula
@@ -193,6 +195,14 @@ class Python36 < Formula
     end
 
     cd "Doc" do
+      if build.head?
+        system bin/"python3", "-m", "venv", "./venv"
+        resource("blurb").stage do
+          system buildpath/"Doc/venv/bin/python3", "-m", "pip", "install", "-v",
+                 "--no-deps", "--no-binary", ":all", "--ignore-installed", "."
+        end
+      end
+
       system "make", "html"
       doc.install Dir["build/html/*"]
     end
