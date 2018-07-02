@@ -1,17 +1,19 @@
 class Python36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.6.5/Python-3.6.5.tar.xz"
-  sha256 "f434053ba1b5c8a5cc597e966ead3c5143012af827fd3f0697d21450bb8d87a6"
-  head "https://github.com/python/cpython", :using => :git
-  # revision 1
+  url "https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tar.xz"
+  sha256 "d79bc15d456e73a3173a2938f18a17e5149c850ebdedf84a78067f501ee6e16f"
+
+  head do
+    url "https://github.com/python/cpython.git"
+
+    resource "blurb" do
+      url "https://pypi.org/packages/source/b/blurb/blurb-1.0.6.tar.gz"
+      sha256 "90c7d2e5d141d7d1fc6ca0fe660025317ac81ca078e6045c46b1bc5a675ce5d1"
+    end
+  end
 
   keg_only :versioned_formula
-
-  devel do
-    url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0b5.tar.xz"
-    sha256 "00e4d85ebd5392f75e979b4cf860b1711642d62fbdd38e0874355b0245185313"
-  end
 
   option :universal
 
@@ -26,13 +28,12 @@ class Python36 < Formula
   depends_on "sashkab/universal/uxz"
   depends_on "tcl-tk" => :optional
 
-
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6"
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.1.0.zip"
-    sha256 "c5484e13b89927b44fd15897f7ce19dded8e7f035466a4fa7b946c0bdd86edd7"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.2.0.zip"
+    sha256 "f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2"
   end
 
   resource "pip" do
@@ -41,8 +42,8 @@ class Python36 < Formula
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.0.tar.gz"
-    sha256 "1ae8153bed701cb062913b72429bcf854ba824f973735427681882a688cb55ce"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.1.tar.gz"
+    sha256 "0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c"
   end
 
   fails_with :clang do
@@ -194,6 +195,14 @@ class Python36 < Formula
     end
 
     cd "Doc" do
+      if build.head?
+        system bin/"python3", "-m", "venv", "./venv"
+        resource("blurb").stage do
+          system buildpath/"Doc/venv/bin/python3", "-m", "pip", "install", "-v",
+                 "--no-deps", "--no-binary", ":all", "--ignore-installed", "."
+        end
+      end
+
       system "make", "html"
       doc.install Dir["build/html/*"]
     end

@@ -3,6 +3,7 @@ class Python27 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tar.xz"
   sha256 "22d9b1ac5b26135ad2b8c2901a9413537e08749a753356ee913c84dbd2df5574"
+  revision 1
   head "https://github.com/python/cpython.git", :branch => "2.7"
 
   keg_only :versioned_formula
@@ -23,8 +24,8 @@ class Python27 < Formula
   depends_on "tcl-tk" => :optional
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.1.0.zip"
-    sha256 "c5484e13b89927b44fd15897f7ce19dded8e7f035466a4fa7b946c0bdd86edd7"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.2.0.zip"
+    sha256 "f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2"
   end
 
   resource "pip" do
@@ -33,8 +34,8 @@ class Python27 < Formula
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.0.tar.gz"
-    sha256 "1ae8153bed701cb062913b72429bcf854ba824f973735427681882a688cb55ce"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.1.tar.gz"
+    sha256 "0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c"
   end
 
   # Patch to disable the search for Tk.framework, since Homebrew's Tk is
@@ -143,8 +144,8 @@ class Python27 < Formula
     # even if homebrew is not a /usr/local/lib. Try this with:
     # `brew install enchant && pip2 install pyenchant`
     inreplace "./Lib/ctypes/macholib/dyld.py" do |f|
-      f.gsub! "DEFAULT_LIBRARY_FALLBACK = [", "DEFAULT_LIBRARY_FALLBACK = [ '#{prefix}/lib',"
-      f.gsub! "DEFAULT_FRAMEWORK_FALLBACK = [", "DEFAULT_FRAMEWORK_FALLBACK = [ '#{prefix}/Frameworks',"
+      f.gsub! "DEFAULT_LIBRARY_FALLBACK = [", "DEFAULT_LIBRARY_FALLBACK = [ '#{lib}',"
+      f.gsub! "DEFAULT_FRAMEWORK_FALLBACK = [", "DEFAULT_FRAMEWORK_FALLBACK = [ '#{frameworks}',"
     end
 
     if build.with? "tcl-tk"
@@ -197,7 +198,6 @@ class Python27 < Formula
         doc.install Dir["build/html/*"]
       end
     end
-
   end
 
   def post_install
@@ -229,7 +229,6 @@ class Python27 < Formula
                   "--record=installed.txt",
                   "--install-scripts=#{bin}",
                   "--install-lib=#{site_packages}"]
-
 
     (libexec/"setuptools").cd { system "#{bin}/python", *setup_args }
     (libexec/"pip").cd { system "#{bin}/python", *setup_args }
@@ -313,27 +312,27 @@ class Python27 < Formula
     EOS
   end
 
- def caveats
+  def caveats
     <<~EOS
       This formula installs a universal python executable to #{opt_bin}.
       If you wish to have this formula's `python`, `python-config`, `pip` etc.
       executables in your PATH then add the following to #{shell_profile}:
-        export PATH="#{opt_bin}:$PATH"
+          export PATH="#{opt_bin}:$PATH"
 
       If you wish to have this formula's `python` executable in your PATH then add
       the following to #{shell_profile}:
-        export PATH="#{opt_libexec}/bin:$PATH"
+          export PATH="#{opt_libexec}/bin:$PATH"
 
       Pip and setuptools have been installed. To update them run
-        #{opt_bin}/pip install --upgrade pip setuptools
+          #{opt_bin}/pip install --upgrade pip setuptools
 
       You can install Python packages with
-        #{opt_bin}/pip install <package>
+          #{opt_bin}/pip install <package>
 
       They will install into the site-package directory
-        #{site_packages}
+          #{site_packages}
 
-    See: https://docs.brew.sh/Homebrew-and-Python
+      See: https://docs.brew.sh/Homebrew-and-Python
     EOS
   end
 

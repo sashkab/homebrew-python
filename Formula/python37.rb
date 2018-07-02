@@ -1,31 +1,35 @@
-class Python35 < Formula
+class Python37 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.5.5/Python-3.5.5.tar.xz"
-  sha256 "063d2c3b0402d6191b90731e0f735c64830e7522348aeb7ed382a83165d45009"
-  head "https://hg.python.org/cpython", :using => :hg
+  url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz"
+  sha256 "0382996d1ee6aafe59763426cf0139ffebe36984474d0ec4126dd1c40a8b3549"
 
-  keg_only "avoiding conflict with Homebrew/core/python"
+  head do
+    url "https://github.com/python/cpython.git"
+
+    resource "blurb" do
+      url "https://pypi.org/packages/source/b/blurb/blurb-1.0.6.tar.gz"
+      sha256 "90c7d2e5d141d7d1fc6ca0fe660025317ac81ca078e6045c46b1bc5a675ce5d1"
+    end
+  end
+
+  keg_only :versioned_formula
 
   option :universal
-  option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"
-  option "with-quicktest", "Run `make quicktest` after the build"
-  option "with-sphinx-doc", "Build HTML documentation"
 
-  deprecated_option "quicktest" => "with-quicktest"
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
-  depends_on "sashkab/universal/ureadline" => :recommended
-  depends_on "sashkab/universal/usqlite" => :recommended
-  depends_on "sashkab/universal/ugdbm" => :recommended
+  depends_on "sphinx-doc" => :build
+  depends_on "sashkab/universal/ugdbm"
   depends_on "sashkab/universal/uopenssl"
+  depends_on "sashkab/universal/ureadline"
+  depends_on "sashkab/universal/usqlite"
+  depends_on "sashkab/universal/uxz"
   depends_on "tcl-tk" => :optional
-  depends_on :x11 if build.with?("tcl-tk") && Tab.for_name("homebrew/dupes/tcl-tk").with?("x11")
-  depends_on "sphinx-doc" => [:build, :optional]
 
-  skip_clean "bin/pip3", "bin/pip-3.5"
-  skip_clean "bin/easy_install3", "bin/easy_install-3.5"
+  skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7"
+  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install- ", "bin/easy_install-3.7"
 
   resource "setuptools" do
     url "https://pypi.org/packages/source/s/setuptools/setuptools-39.2.0.zip"
@@ -52,19 +56,6 @@ class Python35 < Formula
   # X11.
   patch :DATA if build.with? "tcl-tk"
 
-  def lib_cellar
-    prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}"
-  end
-
-  def site_packages_cellar
-    lib_cellar/"site-packages"
-  end
-
-  # The HOMEBREW_PREFIX location of site-packages.
-  def site_packages
-    HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"
-  end
-
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
   pour_bottle? do
@@ -84,17 +75,22 @@ class Python35 < Formula
     ENV["PYTHONHOME"] = nil
     ENV["PYTHONPATH"] = nil
 
+    xy = (buildpath/"configure.ac").read.slice(/PYTHON_VERSION, (3\.\d)/, 1)
+    lib_cellar = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}"
+
     args = %W[
       --prefix=#{prefix}
       --enable-ipv6
       --datarootdir=#{share}
       --datadir=#{share}
       --enable-framework=#{frameworks}
+      --enable-loadable-sqlite-extensions
       --without-ensurepip
+      --with-dtrace
+      --with-openssl=#{Formula["openssl"].opt_prefix}
     ]
 
     args << "--without-gcc" if ENV.compiler == :clang
-    args << "--enable-loadable-sqlite-extensions" if build.with?("sqlite")
 
     cflags   = []
     ldflags  = []
@@ -119,7 +115,6 @@ class Python35 < Formula
     inreplace "setup.py" do |s|
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
               "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
-      s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
     end
 
     if build.universal?
@@ -127,12 +122,10 @@ class Python35 < Formula
       args << "--enable-universalsdk" << "--with-universal-archs=intel"
     end
 
-    if build.with? "sqlite"
-      inreplace "setup.py" do |s|
-        s.gsub! "sqlite_setup_debug = False", "sqlite_setup_debug = True"
-        s.gsub! "for d_ in inc_dirs + sqlite_inc_paths:",
-                "for d_ in ['#{Formula["sqlite"].opt_include}']:"
-      end
+    inreplace "setup.py" do |s|
+      s.gsub! "sqlite_setup_debug = False", "sqlite_setup_debug = True"
+      s.gsub! "for d_ in inc_dirs + sqlite_inc_paths:",
+              "for d_ in ['#{Formula["usqlite"].opt_include}']:"
     end
 
     # Allow python modules to use ctypes.find_library to find homebrew's stuff
@@ -156,9 +149,6 @@ class Python35 < Formula
     system "./configure", *args
 
     system "make"
-    if build.with?("quicktest")
-      system "make", "quicktest", "TESTPYTHONOPTS=-s", "TESTOPTS=-j#{ENV.make_jobs} -w"
-    end
 
     ENV.deparallelize do
       # Tell Python not to install into /Applications (default for framework builds)
@@ -167,7 +157,7 @@ class Python35 < Formula
     end
 
     # Any .app get a " 3" attached, so it does not conflict with python 2.x.
-    Dir.glob("#{prefix}/*.app") { |app| mv app, app.sub(/\.app$/, " 3.5.app") }
+    Dir.glob("#{prefix}/*.app") { |app| mv app, app.sub(/\.app$/, " 3.7.app") }
 
     # Prevent third-party packages from building against fragile Cellar paths
     inreplace Dir[lib_cellar/"**/_sysconfigdata_m_darwin_darwin.py",
@@ -180,6 +170,11 @@ class Python35 < Formula
               /^LINKFORSHARED=(.*)PYTHONFRAMEWORKDIR(.*)/,
               "LINKFORSHARED=\\1PYTHONFRAMEWORKINSTALLDIR\\2"
 
+    # Fix for https://github.com/Homebrew/homebrew-core/issues/21212
+    inreplace Dir[lib_cellar/"**/_sysconfigdata_m_darwin_darwin.py"],
+              %r{('LINKFORSHARED': .*?)'(Python.framework/Versions/3.\d+/Python)'}m,
+              "\\1'#{opt_prefix}/Frameworks/\\2'"
+
     # A fix, because python and python3 both want to install Python.framework
     # and therefore we can't link both into HOMEBREW_PREFIX/Frameworks
     # https://github.com/Homebrew/homebrew/issues/15943
@@ -189,22 +184,37 @@ class Python35 < Formula
     # Symlink the pkgconfig files into HOMEBREW_PREFIX so they're accessible.
     (lib/"pkgconfig").install_symlink Dir["#{frameworks}/Python.framework/Versions/#{xy}/lib/pkgconfig/*"]
 
+    # Remove 2to3 because python2 also installs it
+    # rm bin/"2to3"
+
     # Remove the site-packages that Python created in its Cellar.
-    site_packages_cellar.rmtree
+    (prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/site-packages").rmtree
 
     %w[setuptools pip wheel].each do |r|
       (libexec/r).install resource(r)
     end
 
-    if build.with? "sphinx-doc"
-      cd "Doc" do
-        system "make", "html"
-        doc.install Dir["build/html/*"]
+    cd "Doc" do
+      if build.head?
+        system bin/"python3", "-m", "venv", "./venv"
+        resource("blurb").stage do
+          system buildpath/"Doc/venv/bin/python3", "-m", "pip", "install", "-v",
+                 "--no-deps", "--no-binary", ":all", "--ignore-installed", "."
+        end
       end
+
+      system "make", "html"
+      doc.install Dir["build/html/*"]
     end
   end
 
   def post_install
+    ENV.delete "PYTHONPATH"
+
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
+    site_packages = HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"
+    site_packages_cellar = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/site-packages"
+
     # Fix up the site-packages so that user-installed Python software survives
     # minor updates, such as going from 3.3.2 to 3.3.3:
 
@@ -229,7 +239,7 @@ class Python35 < Formula
 
     %w[setuptools pip wheel].each do |pkg|
       (libexec/pkg).cd do
-        system bin/"python3.5", "-s", "setup.py", "--no-user-cfg", "install",
+        system bin/"python3.7", "-s", "setup.py", "--no-user-cfg", "install",
                "--force", "--verbose", "--install-scripts=#{bin}",
                "--install-lib=#{site_packages}",
                "--single-version-externally-managed",
@@ -238,20 +248,31 @@ class Python35 < Formula
     end
 
     rm_rf [bin/"pip", bin/"easy_install"]
-    mv bin/"wheel", bin/"wheel3.5"
+    mv bin/"wheel", bin/"wheel3"
+
+    # Install unversioned symlinks in libexec/bin.
+    {
+      "easy_install" => "easy_install-#{xy}",
+      "pip" => "pip3",
+      "wheel" => "wheel3",
+    }.each do |unversioned_name, versioned_name|
+      (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
+    end
 
     # post_install happens after link
-    %W[pip3 pip#{xy} easy_install-#{xy} wheel3.5].each do |e|
+    %W[pip3.7 pip#{xy} easy_install-#{xy} wheel3].each do |e|
       (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [HOMEBREW_PREFIX/"include", Formula["uopenssl"].opt_include]
-    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["uopenssl"].opt_lib]
+    include_dirs = [HOMEBREW_PREFIX/"include", Formula["uopenssl"].opt_include,
+                    Formula["sqlite"].opt_include]
+    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["uopenssl"].opt_lib,
+                    Formula["sqlite"].opt_lib]
 
     if build.with? "sqlite"
-      include_dirs << Formula["sqlite"].opt_include
-      library_dirs << Formula["sqlite"].opt_lib
+      include_dirs << Formula["usqlite"].opt_include
+      library_dirs << Formula["usqlite"].opt_lib
     end
 
     if build.with? "tcl-tk"
@@ -259,7 +280,8 @@ class Python35 < Formula
       library_dirs << Formula["tcl-tk"].opt_lib
     end
 
-    cfg = lib_cellar/"distutils/distutils.cfg"
+    cfg = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/distutils/distutils.cfg"
+
     cfg.atomic_write <<~EOS
       [install]
       prefix=#{HOMEBREW_PREFIX}
@@ -270,15 +292,13 @@ class Python35 < Formula
     EOS
   end
 
-  def xy
-    version.to_s.slice(/(3\.\d)/) || "3.5"
-  end
-
   def sitecustomize
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
+
     <<~EOS
       # This file is created by Homebrew and is executed on each python startup.
       # Don't print from here, or else python command line scripts may fail!
-      # <https://github.com/Homebrew/brew/blob/master/docs/Homebrew-and-Python.md>
+      # <https://docs.brew.sh/Homebrew-and-Python>
       import re
       import os
       import sys
@@ -305,7 +325,7 @@ class Python35 < Formula
           # the Cellar site-packages is a symlink to the HOMEBREW_PREFIX
           # site_packages; prefer the shorter paths
           long_prefix = re.compile(r'#{rack}/[0-9\._abrc]+/Frameworks/Python\.framework/Versions/#{xy}/lib/python#{xy}/site-packages')
-          sys.path = [long_prefix.sub('#{site_packages}', p) for p in sys.path]
+          sys.path = [long_prefix.sub('#{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}', p) for p in sys.path]
 
           # Set the sys.executable to use the opt_prefix
           sys.executable = '#{opt_bin}/python#{xy}'
@@ -313,17 +333,22 @@ class Python35 < Formula
   end
 
   def caveats
+    if prefix.exist?
+      xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
+    else
+      xy = version.to_s.slice(/(3\.\d)/) || "3.7"
+    end
     text = <<~EOS
       Pip, setuptools, and wheel have been installed. To update them
-        pip3.5 install --upgrade pip setuptools wheel
+        pip3 install --upgrade pip setuptools wheel
 
       You can install Python packages with
-        pip3.5 install <package>
+        pip3 install <package>
 
       They will install into the site-package directory
-        #{site_packages}
+        #{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}
 
-      See: https://github.com/Homebrew/brew/blob/master/docs/Homebrew-and-Python.md
+      See: https://docs.brew.sh/Homebrew-and-Python
     EOS
 
     # Tk warning only for 10.6
@@ -338,12 +363,14 @@ class Python35 < Formula
   end
 
   test do
+    xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
     # Check if sqlite is ok, because we build with --enable-loadable-sqlite-extensions
     # and it can occur that building sqlite silently fails if OSX's sqlite is used.
     system "#{bin}/python#{xy}", "-c", "import sqlite3"
     # Check if some other modules import. Then the linked libs are working.
     system "#{bin}/python#{xy}", "-c", "import tkinter; root = tkinter.Tk()"
-    system bin/"pip3.5", "list"
+    system "#{bin}/python#{xy}", "-c", "import _gdbm"
+    system bin/"pip3.7", "list"
   end
 end
 
