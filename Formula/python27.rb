@@ -3,6 +3,7 @@ class Python27 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tar.xz"
   sha256 "22d9b1ac5b26135ad2b8c2901a9413537e08749a753356ee913c84dbd2df5574"
+  revision 1
   head "https://github.com/python/cpython.git", :branch => "2.7"
 
   keg_only :versioned_formula
@@ -23,8 +24,8 @@ class Python27 < Formula
   depends_on "tcl-tk" => :optional
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.1.0.zip"
-    sha256 "c5484e13b89927b44fd15897f7ce19dded8e7f035466a4fa7b946c0bdd86edd7"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.2.0.zip"
+    sha256 "f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2"
   end
 
   resource "pip" do
@@ -33,8 +34,8 @@ class Python27 < Formula
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.0.tar.gz"
-    sha256 "1ae8153bed701cb062913b72429bcf854ba824f973735427681882a688cb55ce"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.1.tar.gz"
+    sha256 "0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c"
   end
 
   # Patch to disable the search for Tk.framework, since Homebrew's Tk is
