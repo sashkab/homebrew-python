@@ -32,8 +32,8 @@ class Python36 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.1.0.zip"
-    sha256 "c5484e13b89927b44fd15897f7ce19dded8e7f035466a4fa7b946c0bdd86edd7"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.2.0.zip"
+    sha256 "f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2"
   end
 
   resource "pip" do
@@ -42,8 +42,8 @@ class Python36 < Formula
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.0.tar.gz"
-    sha256 "1ae8153bed701cb062913b72429bcf854ba824f973735427681882a688cb55ce"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.1.tar.gz"
+    sha256 "0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c"
   end
 
   fails_with :clang do
