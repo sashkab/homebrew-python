@@ -1,6 +1,15 @@
 # homebrew-python
 
-This [Homebrew](http://brew.sh) tap provides formulae to install multiple [universal] Python versions. It currently provides Python 2.7.14, Python 3.3.6, Python 3.4.6, Python 3.5.3 and Python 3.6.2. For building universal (i.e i386/x86_64) formulae it uses [sashkab/universal](https://github.com/sashkab/homebrew-universal) tap.
+This [Homebrew](http://brew.sh) tap provides formulae to install multiple [universal] Python versions. For building universal (i.e i386/x86_64) formulae it uses [sashkab/universal](https://github.com/sashkab/homebrew-universal) tap.
+
+Python Version | Latest revision
+---------------|----------------
+Python 2.7     | 2.7.15
+Python 3.3     | 3.3.6
+Python 3.4     | 3.4.6
+Python 3.5     | 3.5.5
+Python 3.6     | 3.6.6
+Python 3.7     | 3.7.0
 
 ## Installing formulae
 
@@ -32,7 +41,7 @@ virtualenv -p /usr/local/opt/python27/bin/python2.7 <path to venv>
 
 ### Python 3.X
 
-Replace `X` in example below with either `3` for Python 3.3, `4` for Python 3.4, `5` for Python 3.5, or `6` for Python 3.6.
+Replace `X` in example below with either `3` for Python 3.3, `4` for Python 3.4, `5` for Python 3.5, `6` for Python 3.6, or `7` for Python 3.7.
 
 ```bash
 brew install sashkab/python/python3X  [--universal]
