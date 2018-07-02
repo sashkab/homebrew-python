@@ -6,12 +6,12 @@ class Python36 < Formula
   head "https://github.com/python/cpython", :using => :git
   # revision 1
 
-  keg_only :versioned_formula
-
   devel do
     url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0b5.tar.xz"
     sha256 "00e4d85ebd5392f75e979b4cf860b1711642d62fbdd38e0874355b0245185313"
   end
+
+  keg_only :versioned_formula
 
   option :universal
 
@@ -25,7 +25,6 @@ class Python36 < Formula
   depends_on "sashkab/universal/usqlite"
   depends_on "sashkab/universal/uxz"
   depends_on "tcl-tk" => :optional
-
 
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6"
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
