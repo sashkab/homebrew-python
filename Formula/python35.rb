@@ -1,8 +1,8 @@
 class Python35 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.5.5/Python-3.5.5.tar.xz"
-  sha256 "063d2c3b0402d6191b90731e0f735c64830e7522348aeb7ed382a83165d45009"
+  url "https://www.python.org/ftp/python/3.5.6/Python-3.5.6.tar.xz"
+  sha256 "f55cde04f521f273c7cba08912921cc5642cfc15ca7b22d5829f0aff4371155f"
   head "https://hg.python.org/cpython", :using => :hg
 
   keg_only "avoiding conflict with Homebrew/core/python"
@@ -28,13 +28,13 @@ class Python35 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.5"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.2.0.zip"
-    sha256 "f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.2.0.zip"
+    sha256 "47881d54ede4da9c15273bac65f9340f8929d4f0213193fa7894be384f2dcfa6"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-10.0.1.tar.gz"
-    sha256 "f2bd08e0cd1b06e10218feaf6fef299f473ba706582eb3bd9d52203fdbd7ee68"
+    url "https://www.pypi.org/packages/source/p/pip/pip-18.0.tar.gz"
+    sha256 "a0e11645ee37c90b40c46d607070c4fd583e2cd46231b1c06e389c5e814eed76"
   end
 
   resource "wheel" do
