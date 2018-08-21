@@ -1,10 +1,9 @@
 class Python34 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.4.6/Python-3.4.6.tar.xz"
-  sha256 "f13428bbe6aa9e3b9b6499502dc488c26096349ed7a21f7a0c1db90911115f40"
+  url "https://www.python.org/ftp/python/3.4.9/Python-3.4.9.tar.xz"
+  sha256 "59629676ba2b01a798f5211d8f63c26ee52f1d5133cf37583e0bf1bad50c2bd9"
   head "https://hg.python.org/cpython", :using => :hg, :branch => "3.4"
-  revision 5
 
   keg_only "avoiding conflict with Homebrew/core/python3."
 
@@ -27,18 +26,18 @@ class Python34 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-33.1.1.zip"
-    sha256 "6b20352ed60ba08c43b3611bdb502286f7a869fbfcf472f40d7279f1e77de145"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.2.0.zip"
+    sha256 "47881d54ede4da9c15273bac65f9340f8929d4f0213193fa7894be384f2dcfa6"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-9.0.1.tar.gz"
-    sha256 "09f243e1a7b461f654c26a725fa373211bb7ff17a9300058b205c61658ca940d"
+    url "https://www.pypi.org/packages/source/p/pip/pip-18.0.tar.gz"
+    sha256 "a0e11645ee37c90b40c46d607070c4fd583e2cd46231b1c06e389c5e814eed76"
   end
 
   resource "wheel" do
-    url "https://pypi.python.org/packages/source/w/wheel/wheel-0.29.0.tar.gz"
-    sha256 "1ebb8ad7e26b448e9caa4773d2357849bf80ff9e313964bcaf79cbf0201a1648"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.1.tar.gz"
+    sha256 "0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c"
   end
 
   # Homebrew's tcl-tk is built in a standard unix fashion (due to link errors)
