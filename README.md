@@ -1,5 +1,14 @@
 # homebrew-python
 
+## Deprecation notice
+
+Due to Apple's removal of i386 SDK from the Command Line Tools for XCode 10 for macOS 10.13 and not inclusion in to same tools under 10.14, there is no way to
+compile and build universal binaries on macOS any longer.
+
+This project is deprecated and no longer supported.
+
+## About this project
+
 This [Homebrew](http://brew.sh) tap provides formulae to install multiple [universal] Python versions. For building universal (i.e i386/x86_64) formulae it uses [sashkab/universal](https://github.com/sashkab/homebrew-universal) tap.
 
 Python Version | Latest revision
