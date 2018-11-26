@@ -4,6 +4,17 @@ class Python37 < Formula
   url "https://www.python.org/ftp/python/3.7.1/Python-3.7.1.tar.xz"
   sha256 "fa7e2b8e8c9402f192ad56dc4f814089d1c4466c97d780f5e5acc02c04243d6d"
 
+  # setuptools remembers the build flags python is built with and uses them to
+  # build packages later. Xcode-only systems need different flags.
+  pour_bottle? do
+    reason <<~EOS
+      The bottle needs the Apple Command Line Tools to be installed.
+        You can install them, if desired, with:
+          xcode-select --install
+    EOS
+    satisfy { MacOS::CLT.installed? }
+  end
+
   head do
     url "https://github.com/python/cpython.git"
   end
@@ -19,6 +30,11 @@ class Python37 < Formula
   depends_on "sqlite"
   depends_on "xz"
   depends_on "tcl-tk" => :optional
+
+  fails_with :clang do
+    build 425
+    cause "https://bugs.python.org/issue24844"
+  end
 
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7"
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install- ", "bin/easy_install-3.7"
@@ -38,26 +54,10 @@ class Python37 < Formula
     sha256 "029703bf514e16c8271c3821806a1c171220cc5bdd325cbf4e7da1e056a01db6"
   end
 
-  fails_with :clang do
-    build 425
-    cause "https://bugs.python.org/issue24844"
-  end
-
   # Homebrew's tcl-tk is built in a standard unix fashion (due to link errors)
   # so we have to stop python from searching for frameworks and linking against
   # X11.
   patch :DATA if build.with? "tcl-tk"
-
-  # setuptools remembers the build flags python is built with and uses them to
-  # build packages later. Xcode-only systems need different flags.
-  pour_bottle? do
-    reason <<~EOS
-      The bottle needs the Apple Command Line Tools to be installed.
-        You can install them, if desired, with:
-          xcode-select --install
-    EOS
-    satisfy { MacOS::CLT.installed? }
-  end
 
   def install
     ENV.permit_weak_imports
