@@ -111,14 +111,14 @@ class Python36 < Formula
     # superenv makes cc always find includes/libs!
     inreplace "setup.py" do |s|
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
-              "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
-      s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
+              "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
+      s.gsub! "/usr/local/ssl", Formula["openssl"].opt_prefix
     end
 
     inreplace "setup.py" do |s|
       s.gsub! "sqlite_setup_debug = False", "sqlite_setup_debug = True"
       s.gsub! "for d_ in inc_dirs + sqlite_inc_paths:",
-              "for d_ in ['#{Formula["usqlite"].opt_include}']:"
+              "for d_ in ['#{Formula["sqlite"].opt_include}']:"
     end
 
     # Allow python modules to use ctypes.find_library to find homebrew's stuff
@@ -258,14 +258,14 @@ class Python36 < Formula
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [HOMEBREW_PREFIX/"include", Formula["uopenssl"].opt_include,
+    include_dirs = [HOMEBREW_PREFIX/"include", Formula["openssl"].opt_include,
                     Formula["sqlite"].opt_include]
-    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["uopenssl"].opt_lib,
+    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["openssl"].opt_lib,
                     Formula["sqlite"].opt_lib]
 
     if build.with? "sqlite"
-      include_dirs << Formula["usqlite"].opt_include
-      library_dirs << Formula["usqlite"].opt_lib
+      include_dirs << Formula["sqlite"].opt_include
+      library_dirs << Formula["sqlite"].opt_lib
     end
 
     if build.with? "tcl-tk"

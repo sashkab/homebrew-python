@@ -120,8 +120,8 @@ class Python27 < Formula
     # superenv handles that cc finds includes/libs!
     inreplace "setup.py" do |s|
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
-              "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
-      s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
+              "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
+      s.gsub! "/usr/local/ssl", Formula["openssl"].opt_prefix
     end
 
     inreplace "setup.py" do |s|
@@ -235,10 +235,10 @@ class Python27 < Formula
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [prefix/"include", Formula["uopenssl"].opt_include,
-                    Formula["usqlite"].opt_include]
-    library_dirs = [prefix/"lib", Formula["uopenssl"].opt_lib,
-                    Formula["usqlite"].opt_include]
+    include_dirs = [prefix/"include", Formula["openssl"].opt_include,
+                    Formula["sqlite"].opt_include]
+    library_dirs = [prefix/"lib", Formula["openssl"].opt_lib,
+                    Formula["sqlite"].opt_include]
 
     if build.with? "tcl-tk"
       include_dirs << Formula["tcl-tk"].opt_include
