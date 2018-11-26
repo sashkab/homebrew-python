@@ -4,7 +4,7 @@ class Python33 < Formula
   url "https://python.org/ftp/python/3.3.6/Python-3.3.6.tgz"
   sha256 "0a58ad1f1def4ecc90b18b0c410a3a0e1a48cf7692c75d1f83d0af080e5d2034"
   head "https://hg.python.org/cpython", :using => :hg, :branch => "3.3"
-  revision 7
+  revision 8
 
   keg_only :versioned_formula
 

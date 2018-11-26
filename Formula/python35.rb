@@ -4,6 +4,7 @@ class Python35 < Formula
   url "https://www.python.org/ftp/python/3.5.6/Python-3.5.6.tar.xz"
   sha256 "f55cde04f521f273c7cba08912921cc5642cfc15ca7b22d5829f0aff4371155f"
   head "https://hg.python.org/cpython", :using => :hg
+  revision 1
 
   keg_only :versioned_formula
 
@@ -28,19 +29,20 @@ class Python35 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.5"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.2.0.zip"
-    sha256 "47881d54ede4da9c15273bac65f9340f8929d4f0213193fa7894be384f2dcfa6"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.6.2.zip"
+    sha256 "86bb4d8e1b0fabad1f4642b64c335b673e53e7a381de03c9a89fe678152c4c64"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-18.0.tar.gz"
-    sha256 "a0e11645ee37c90b40c46d607070c4fd583e2cd46231b1c06e389c5e814eed76"
+    url "https://www.pypi.org/packages/source/p/pip/pip-18.1.tar.gz"
+    sha256 "c0a292bd977ef590379a3f05d7b7f65135487b67470f6281289a94e015650ea1"
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.1.tar.gz"
-    sha256 "0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.32.3.tar.gz"
+    sha256 "029703bf514e16c8271c3821806a1c171220cc5bdd325cbf4e7da1e056a01db6"
   end
+
 
   fails_with :clang do
     build 425
