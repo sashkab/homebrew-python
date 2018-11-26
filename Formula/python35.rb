@@ -5,7 +5,7 @@ class Python35 < Formula
   sha256 "f55cde04f521f273c7cba08912921cc5642cfc15ca7b22d5829f0aff4371155f"
   head "https://hg.python.org/cpython", :using => :hg
 
-  keg_only "avoiding conflict with Homebrew/core/python"
+  keg_only :versioned_formula
 
   option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"
@@ -16,10 +16,10 @@ class Python35 < Formula
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
-  depends_on "sashkab/universal/ureadline" => :recommended
-  depends_on "sashkab/universal/usqlite" => :recommended
-  depends_on "sashkab/universal/ugdbm" => :recommended
-  depends_on "sashkab/universal/uopenssl"
+  depends_on "readline" => :recommended
+  depends_on "sqlite" => :recommended
+  depends_on "gdbm" => :recommended
+  depends_on "openssl"
   depends_on "tcl-tk" => :optional
   depends_on :x11 if build.with?("tcl-tk") && Tab.for_name("homebrew/dupes/tcl-tk").with?("x11")
   depends_on "sphinx-doc" => [:build, :optional]

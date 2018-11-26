@@ -6,9 +6,8 @@ class Python33 < Formula
   head "https://hg.python.org/cpython", :using => :hg, :branch => "3.3"
   revision 7
 
-  keg_only "avoiding conflict with Homebrew/core/python3."
+  keg_only :versioned_formula
 
-  option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of OS X Tk (has optional Cocoa and threads support)"
   option "with-quicktest", "Run `make quicktest` after the build"
 
@@ -16,11 +15,11 @@ class Python33 < Formula
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
-  depends_on "sashkab/universal/ureadline" => :recommended
-  depends_on "sashkab/universal/usqlite" => :recommended
-  depends_on "sashkab/universal/ugdbm" => :recommended
-  depends_on "sashkab/universal/uopenssl"
-  depends_on "sashkab/universal/uxz" => :recommended # for the lzma module added in 3.3
+  depends_on "readline" => :recommended
+  depends_on "sqlite" => :recommended
+  depends_on "gdbm" => :recommended
+  depends_on "openssl"
+  depends_on "xz" => :recommended # for the lzma module added in 3.3
   depends_on "tcl-tk" => :optional
 
   skip_clean "bin/pip3", "bin/pip-3.3"
@@ -103,11 +102,6 @@ class Python33 < Formula
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
               "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
       s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
-    end
-
-    if build.universal?
-      ENV.universal_binary
-      args << "--enable-universalsdk" << "--with-universal-archs=intel"
     end
 
     # Allow sqlite3 module to load extensions: https://docs.python.org/library/sqlite3.html#f1

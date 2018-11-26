@@ -10,17 +10,16 @@ class Python27 < Formula
 
   # Please don't add a wide/ucs4 option as it won't be accepted.
   # More details in: https://github.com/Homebrew/homebrew/pull/32368
-  option :universal
   option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"
 
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
   depends_on "sphinx-doc" => :build if MacOS.version > :snow_leopard
-  depends_on "sashkab/universal/ugdbm"
-  depends_on "sashkab/universal/uopenssl"
-  depends_on "sashkab/universal/ureadline"
-  depends_on "sashkab/universal/usqlite"
+  depends_on "gdbm"
+  depends_on "openssl"
+  depends_on "readline"
+  depends_on "sqlite"
   depends_on "tcl-tk" => :optional
 
   resource "setuptools" do
@@ -123,11 +122,6 @@ class Python27 < Formula
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
               "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
       s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
-    end
-
-    if build.universal?
-      ENV.universal_binary
-      args << "--enable-universalsdk=/" << "--with-universal-archs=intel"
     end
 
     inreplace "setup.py" do |s|
@@ -314,7 +308,7 @@ class Python27 < Formula
 
   def caveats
     <<~EOS
-      This formula installs a universal python executable to #{opt_bin}.
+      This formula installs a python executable to #{opt_bin}.
       If you wish to have this formula's `python`, `python-config`, `pip` etc.
       executables in your PATH then add the following to #{shell_profile}:
           export PATH="#{opt_bin}:$PATH"

@@ -15,17 +15,15 @@ class Python36 < Formula
 
   keg_only :versioned_formula
 
-  option :universal
-
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
   depends_on "sphinx-doc" => :build
-  depends_on "sashkab/universal/ugdbm"
-  depends_on "sashkab/universal/uopenssl"
-  depends_on "sashkab/universal/ureadline"
-  depends_on "sashkab/universal/usqlite"
-  depends_on "sashkab/universal/uxz"
+  depends_on "gdbm"
+  depends_on "openssl"
+  depends_on "readline"
+  depends_on "sqlite"
+  depends_on "xz"
   depends_on "tcl-tk" => :optional
 
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6"
@@ -115,11 +113,6 @@ class Python36 < Formula
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
               "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
       s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
-    end
-
-    if build.universal?
-      ENV.universal_binary
-      args << "--enable-universalsdk" << "--with-universal-archs=intel"
     end
 
     inreplace "setup.py" do |s|
