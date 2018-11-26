@@ -6,11 +6,6 @@ class Python37 < Formula
 
   head do
     url "https://github.com/python/cpython.git"
-
-    resource "blurb" do
-      url "https://pypi.org/packages/source/b/blurb/blurb-1.0.6.tar.gz"
-      sha256 "90c7d2e5d141d7d1fc6ca0fe660025317ac81ca078e6045c46b1bc5a675ce5d1"
-    end
   end
 
   keg_only :versioned_formula
@@ -18,7 +13,6 @@ class Python37 < Formula
   deprecated_option "with-brewed-tk" => "with-tcl-tk"
 
   depends_on "pkg-config" => :build
-  depends_on "sphinx-doc" => :build
   depends_on "gdbm"
   depends_on "openssl"
   depends_on "readline"
@@ -187,18 +181,6 @@ class Python37 < Formula
       (libexec/r).install resource(r)
     end
 
-    cd "Doc" do
-      if build.head?
-        system bin/"python3", "-m", "venv", "./venv"
-        resource("blurb").stage do
-          system buildpath/"Doc/venv/bin/python3", "-m", "pip", "install", "-v",
-                 "--no-deps", "--no-binary", ":all", "--ignore-installed", "."
-        end
-      end
-
-      system "make", "html"
-      doc.install Dir["build/html/*"]
-    end
   end
 
   def post_install
