@@ -314,9 +314,6 @@ class Python36 < Formula
       xy = version.to_s.slice(/(3\.\d)/) || "3.6"
     end
     text = <<~EOS
-      Pip, setuptools, and wheel have been installed. To update them
-        pip3 install --upgrade pip setuptools wheel
-
       You can install Python packages with
         pip3 install <package>
 

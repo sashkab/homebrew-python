@@ -319,9 +319,6 @@ class Python35 < Formula
 
   def caveats
     text = <<~EOS
-      Pip, setuptools, and wheel have been installed. To update them
-        pip3.5 install --upgrade pip setuptools wheel
-
       You can install Python packages with
         pip3.5 install <package>
 
