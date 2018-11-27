@@ -160,7 +160,6 @@ class Python36 < Formula
     %w[setuptools pip wheel].each do |r|
       (libexec/r).install resource(r)
     end
-
   end
 
   def post_install
@@ -208,8 +207,8 @@ class Python36 < Formula
     # Install unversioned symlinks in libexec/bin.
     {
       "easy_install" => "easy_install-#{xy}",
-      "pip" => "pip3",
-      "wheel" => "wheel3",
+      "pip"          => "pip3",
+      "wheel"        => "wheel3",
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
     end

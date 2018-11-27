@@ -47,7 +47,6 @@ class Python37 < Formula
     sha256 "029703bf514e16c8271c3821806a1c171220cc5bdd325cbf4e7da1e056a01db6"
   end
 
-
   def install
     ENV.permit_weak_imports
 
@@ -161,7 +160,6 @@ class Python37 < Formula
     %w[setuptools pip wheel].each do |r|
       (libexec/r).install resource(r)
     end
-
   end
 
   def post_install
@@ -209,8 +207,8 @@ class Python37 < Formula
     # Install unversioned symlinks in libexec/bin.
     {
       "easy_install" => "easy_install-#{xy}",
-      "pip" => "pip3",
-      "wheel" => "wheel3",
+      "pip"          => "pip3",
+      "wheel"        => "wheel3",
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
     end

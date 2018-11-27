@@ -37,7 +37,6 @@ class Python35 < Formula
     sha256 "029703bf514e16c8271c3821806a1c171220cc5bdd325cbf4e7da1e056a01db6"
   end
 
-
   fails_with :clang do
     build 425
     cause "https://bugs.python.org/issue24844"
@@ -99,7 +98,8 @@ class Python35 < Formula
       if DevelopmentTools.clang_build_version < 1000
         cflags  << "-I/usr/include" # find zlib
       end
-    end    # Avoid linking to libgcc https://mail.python.org/pipermail/python-dev/2012-February/116205.html
+    end
+    # Avoid linking to libgcc https://mail.python.org/pipermail/python-dev/2012-February/116205.html
     args << "MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}"
 
     # We want our readline and openssl! This is just to outsmart the detection code,
