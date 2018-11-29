@@ -7,7 +7,7 @@ This [Homebrew](http://brew.sh) tap provides formulae to install multiple Python
 Python Version | Latest revision
 ---------------|----------------
 Python 2.7     | 2.7.15
-Python 3.3     | 3.3.6
+Python 3.3     | 3.3.7
 Python 3.4     | 3.4.9
 Python 3.5     | 3.5.6
 Python 3.6     | 3.6.7
@@ -55,6 +55,11 @@ Replace `X` in example below with either `3` for Python 3.3, `4` for Python 3.4,
 brew install sashkab/python/python3X
 pip3.X install -U pip setuptools
 ```
+
+### Python 3.3 deprecation notice
+
+All support for the 3.3 series of releases ended on 2017-09-29, therefore python33 package will be removed from this repository around 2019-01-01.
+
 
 ## Acknowledgement
 
