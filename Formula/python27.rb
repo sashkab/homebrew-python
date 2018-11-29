@@ -6,8 +6,6 @@ class Python27 < Formula
   revision 2
   head "https://github.com/python/cpython.git", :branch => "2.7"
 
-  keg_only :versioned_formula
-
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
   pour_bottle? do
@@ -18,6 +16,8 @@ class Python27 < Formula
     EOS
     satisfy { MacOS::CLT.installed? }
   end
+
+  keg_only :versioned_formula
 
   depends_on "pkg-config" => :build
   depends_on "sphinx-doc" => :build if MacOS.version > :snow_leopard
@@ -54,8 +54,6 @@ class Python27 < Formula
   end
 
   def install
-    ENV.permit_weak_imports
-
     # Unset these so that installing pip and setuptools puts them where we want
     # and not into some other Python the user has installed.
     ENV["PYTHONHOME"] = nil
@@ -90,9 +88,16 @@ class Python27 < Formula
       # The setup.py looks at "-isysroot" to get the sysroot (and not at --sysroot)
       cflags  << "-isysroot #{MacOS.sdk_path}"
       ldflags << "-isysroot #{MacOS.sdk_path}"
-      if DevelopmentTools.clang_build_version < 1000
-        cflags  << "-I/usr/include" # find zlib
+
+      if MacOS.version == :mojave
+        cflags << "-I/usr/include"
+      else
+        cflags << "-I#{MacOS.sdk_path}/usr/include"
       end
+      # For the Xlib.h, Python needs this header dir with the system Tk
+      # Yep, this needs the absolute path where zlib needed a path relative
+      # to the SDK.
+      cflags  << "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
     end
 
     # Avoid linking to libgcc https://code.activestate.com/lists/python-dev/112195/
@@ -129,7 +134,6 @@ class Python27 < Formula
     args << "CPPFLAGS=#{cppflags.join(" ")}" unless cppflags.empty?
 
     system "./configure", *args
-
     system "make"
 
     ENV.deparallelize do
@@ -203,12 +207,6 @@ class Python27 < Formula
     (libexec/"setuptools").cd { system "#{bin}/python", *setup_args }
     (libexec/"pip").cd { system "#{bin}/python", *setup_args }
     (libexec/"wheel").cd { system "#{bin}/python", *setup_args }
-
-    # When building from source, these symlinks will not exist, since
-    # post_install happens after linking.
-    %w[pip pip2 pip2.7 easy_install easy_install-2.7 wheel].each do |e|
-      (prefix/"bin").install_symlink bin/e
-    end
 
     # Help distutils find brewed stuff when building extensions
     include_dirs = [prefix/"include", Formula["openssl"].opt_include,
@@ -308,6 +306,8 @@ class Python27 < Formula
     # Check if some other modules import. Then the linked libs are working.
     system "#{bin}/python", "-c", "import Tkinter; root = Tkinter.Tk()"
     system "#{bin}/python", "-c", "import gdbm"
-    system bin/"pip", "list"
+    system "#{bin}/python", "-c", "import zlib"
+    system "#{bin}/python", "-c", "import ssl"
+    system "#{bin}/pip", "list"
   end
 end
