@@ -316,6 +316,8 @@ class Python36 < Formula
     # Check if some other modules import. Then the linked libs are working.
     system "#{bin}/python#{xy}", "-c", "import tkinter; root = tkinter.Tk()"
     system "#{bin}/python#{xy}", "-c", "import _gdbm"
+    system "#{bin}/python", "-c", "import zlib"
+    system "#{bin}/python", "-c", "import ssl"
     system bin/"pip3.6", "list"
   end
 end
