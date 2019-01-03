@@ -8,8 +8,8 @@ Python Version | Latest revision
 ---------------|----------------
 Python 2.7     | 2.7.15
 Python 3.5     | 3.5.6
-Python 3.6     | 3.6.7
-Python 3.7     | 3.7.1
+Python 3.6     | 3.6.8
+Python 3.7     | 3.7.2
 
 ### Universal support -- Deprecation notice
 
