@@ -15,7 +15,7 @@ Python 3.7     | 3.7.2
 
 Due to Apple's removal of i386 SDK from the Command Line Tools for XCode 10 for macOS 10.13 (High Sierra) and not including it with the XCode 10 tools on  10.14 (Mojave), there is no way to compile and build universal binaries on macOS any longer.
 
-This project's universal support is deprecated and no longer supported. Universal support has been removed in [#29][29] in November 2018.
+This project's universal support is deprecated and no longer supported. Universal support has been removed in [#29][29] in January 2019.
 
 ## Installing formulae
 
