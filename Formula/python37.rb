@@ -285,7 +285,7 @@ class Python37 < Formula
     end
     <<~EOS
       You can install Python packages with
-        pip3 install <package>
+        pip3.7 install <package>
 
       They will install into the site-package directory
         #{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}
@@ -303,6 +303,7 @@ class Python37 < Formula
     system "#{bin}/python#{xy}", "-c", "import tkinter; root = tkinter.Tk()"
     system "#{bin}/python#{xy}", "-c", "import _gdbm"
     system "#{bin}/python#{xy}", "-c", "import zlib"
+    system "#{bin}/python#{xy}", "-c", "import ssl"
     system bin/"pip3.7", "list", "--format=columns"
   end
 end
