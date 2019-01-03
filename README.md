@@ -7,8 +7,6 @@ This [Homebrew](http://brew.sh) tap provides formulae to install multiple Python
 Python Version | Latest revision
 ---------------|----------------
 Python 2.7     | 2.7.15
-Python 3.3     | 3.3.7
-Python 3.4     | 3.4.9
 Python 3.5     | 3.5.6
 Python 3.6     | 3.6.7
 Python 3.7     | 3.7.1
