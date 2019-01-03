@@ -1,7 +1,9 @@
 jobs:
 - job: macOS
+
   pool:
     vmImage: xcode9-macos10.13
+
   steps:
     - bash: |
         sudo xcode-select --switch /Applications/Xcode_10.app/Contents/Developer
@@ -10,5 +12,9 @@ jobs:
         mkdir -p "$HOMEBREW_TAP_DIR"
         rm -rf "$HOMEBREW_TAP_DIR"
         ln -s "$PWD" "$HOMEBREW_TAP_DIR"
+        brew --version
+        brew doctor
+        brew test-bot --dry-run
         brew test-bot
+
       displayName: Run brew test-bot
