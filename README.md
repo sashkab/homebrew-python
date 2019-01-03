@@ -54,11 +54,6 @@ brew install sashkab/python/python3X
 pip3.X install -U pip setuptools
 ```
 
-### Python 3.3 deprecation notice
-
-All support for the 3.3 series of releases ended on 2017-09-29, therefore python33 package will be removed from this repository around 2019-01-01.
-
-
 ## Acknowledgement
 
 This repository started as a fork of the [zoidbergwill/homebrew-python][1].
