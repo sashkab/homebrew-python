@@ -1,60 +1,8 @@
 class Python37 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz"
-  sha256 "0382996d1ee6aafe59763426cf0139ffebe36984474d0ec4126dd1c40a8b3549"
-
-  head do
-    url "https://github.com/python/cpython.git"
-
-    resource "blurb" do
-      url "https://pypi.org/packages/source/b/blurb/blurb-1.0.6.tar.gz"
-      sha256 "90c7d2e5d141d7d1fc6ca0fe660025317ac81ca078e6045c46b1bc5a675ce5d1"
-    end
-  end
-
-  keg_only :versioned_formula
-
-  option :universal
-
-  deprecated_option "with-brewed-tk" => "with-tcl-tk"
-
-  depends_on "pkg-config" => :build
-  depends_on "sphinx-doc" => :build
-  depends_on "sashkab/universal/ugdbm"
-  depends_on "sashkab/universal/uopenssl"
-  depends_on "sashkab/universal/ureadline"
-  depends_on "sashkab/universal/usqlite"
-  depends_on "sashkab/universal/uxz"
-  depends_on "tcl-tk" => :optional
-
-  skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7"
-  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install- ", "bin/easy_install-3.7"
-
-  resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-39.2.0.zip"
-    sha256 "f7cddbb5f5c640311eb00eab6e849f7701fa70bf6a183fc8a2c33dd1d1672fb2"
-  end
-
-  resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-10.0.1.tar.gz"
-    sha256 "f2bd08e0cd1b06e10218feaf6fef299f473ba706582eb3bd9d52203fdbd7ee68"
-  end
-
-  resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.1.tar.gz"
-    sha256 "0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c"
-  end
-
-  fails_with :clang do
-    build 425
-    cause "https://bugs.python.org/issue24844"
-  end
-
-  # Homebrew's tcl-tk is built in a standard unix fashion (due to link errors)
-  # so we have to stop python from searching for frameworks and linking against
-  # X11.
-  patch :DATA if build.with? "tcl-tk"
+  url "https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tar.xz"
+  sha256 "d83fe8ce51b1bb48bbcf0550fd265b9a75cdfdfa93f916f9e700aef8444bf1bb"
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
@@ -67,9 +15,39 @@ class Python37 < Formula
     satisfy { MacOS::CLT.installed? }
   end
 
-  def install
-    ENV.permit_weak_imports
+  keg_only :versioned_formula
 
+  depends_on "pkg-config" => :build
+  depends_on "gdbm"
+  depends_on "openssl"
+  depends_on "readline"
+  depends_on "sqlite"
+  depends_on "xz"
+
+  skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7"
+  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6", "bin/easy_install-3.7"
+
+  fails_with :clang do
+    build 425
+    cause "https://bugs.python.org/issue24844"
+  end
+
+  resource "setuptools" do
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.6.3.zip"
+    sha256 "3b474dad69c49f0d2d86696b68105f3a6f195f7ab655af12ef9a9c326d2b08f8"
+  end
+
+  resource "pip" do
+    url "https://www.pypi.org/packages/source/p/pip/pip-18.1.tar.gz"
+    sha256 "c0a292bd977ef590379a3f05d7b7f65135487b67470f6281289a94e015650ea1"
+  end
+
+  resource "wheel" do
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.32.3.tar.gz"
+    sha256 "029703bf514e16c8271c3821806a1c171220cc5bdd325cbf4e7da1e056a01db6"
+  end
+
+  def install
     # Unset these so that installing pip and setuptools puts them where we want
     # and not into some other Python the user has installed.
     ENV["PYTHONHOME"] = nil
@@ -96,36 +74,34 @@ class Python37 < Formula
     ldflags  = []
     cppflags = []
 
-    unless MacOS::CLT.installed?
-      # Help Python's build system (setuptools/pip) to build things on Xcode-only systems
+    if MacOS.sdk_path_if_needed
+      # Help Python's build system (setuptools/pip) to build things on SDK-based systems
       # The setup.py looks at "-isysroot" to get the sysroot (and not at --sysroot)
-      cflags   << "-isysroot #{MacOS.sdk_path}"
-      ldflags  << "-isysroot #{MacOS.sdk_path}"
-      cppflags << "-I#{MacOS.sdk_path}/usr/include" # find zlib
-      # For the Xlib.h, Python needs this header dir with the system Tk
-      if build.without? "tcl-tk"
-        cflags << "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
+      cflags  << "-isysroot #{MacOS.sdk_path}"
+      ldflags << "-isysroot #{MacOS.sdk_path}"
+
+      if DevelopmentTools.clang_build_version < 1000
+        cflags  << "-I/usr/include" # find zlib
       end
+
+      # For the Xlib.h, Python needs this header dir with the system Tk
+      # Yep, this needs the absolute path where zlib needed a path relative
+      # to the SDK.
+      cflags << "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
     end
     # Avoid linking to libgcc https://mail.python.org/pipermail/python-dev/2012-February/116205.html
     args << "MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}"
 
-    # We want our readline and openssl! This is just to outsmart the detection code,
+    # We want our readline! This is just to outsmart the detection code,
     # superenv makes cc always find includes/libs!
-    inreplace "setup.py" do |s|
-      s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
-              "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
-    end
-
-    if build.universal?
-      ENV.universal_binary
-      args << "--enable-universalsdk" << "--with-universal-archs=intel"
-    end
+    inreplace "setup.py",
+      "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
+      "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
 
     inreplace "setup.py" do |s|
       s.gsub! "sqlite_setup_debug = False", "sqlite_setup_debug = True"
       s.gsub! "for d_ in inc_dirs + sqlite_inc_paths:",
-              "for d_ in ['#{Formula["usqlite"].opt_include}']:"
+              "for d_ in ['#{Formula["sqlite"].opt_include}']:"
     end
 
     # Allow python modules to use ctypes.find_library to find homebrew's stuff
@@ -136,18 +112,11 @@ class Python37 < Formula
       f.gsub! "DEFAULT_FRAMEWORK_FALLBACK = [", "DEFAULT_FRAMEWORK_FALLBACK = [ '#{HOMEBREW_PREFIX}/Frameworks',"
     end
 
-    if build.with? "tcl-tk"
-      tcl_tk = Formula["tcl-tk"].opt_prefix
-      cppflags << "-I#{tcl_tk}/include"
-      ldflags  << "-L#{tcl_tk}/lib"
-    end
-
     args << "CFLAGS=#{cflags.join(" ")}" unless cflags.empty?
     args << "LDFLAGS=#{ldflags.join(" ")}" unless ldflags.empty?
     args << "CPPFLAGS=#{cppflags.join(" ")}" unless cppflags.empty?
 
     system "./configure", *args
-
     system "make"
 
     ENV.deparallelize do
@@ -184,27 +153,11 @@ class Python37 < Formula
     # Symlink the pkgconfig files into HOMEBREW_PREFIX so they're accessible.
     (lib/"pkgconfig").install_symlink Dir["#{frameworks}/Python.framework/Versions/#{xy}/lib/pkgconfig/*"]
 
-    # Remove 2to3 because python2 also installs it
-    # rm bin/"2to3"
-
     # Remove the site-packages that Python created in its Cellar.
     (prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/site-packages").rmtree
 
     %w[setuptools pip wheel].each do |r|
       (libexec/r).install resource(r)
-    end
-
-    cd "Doc" do
-      if build.head?
-        system bin/"python3", "-m", "venv", "./venv"
-        resource("blurb").stage do
-          system buildpath/"Doc/venv/bin/python3", "-m", "pip", "install", "-v",
-                 "--no-deps", "--no-binary", ":all", "--ignore-installed", "."
-        end
-      end
-
-      system "make", "html"
-      doc.install Dir["build/html/*"]
     end
   end
 
@@ -253,8 +206,8 @@ class Python37 < Formula
     # Install unversioned symlinks in libexec/bin.
     {
       "easy_install" => "easy_install-#{xy}",
-      "pip" => "pip3",
-      "wheel" => "wheel3",
+      "pip"          => "pip3",
+      "wheel"        => "wheel3",
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
     end
@@ -265,20 +218,10 @@ class Python37 < Formula
     end
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [HOMEBREW_PREFIX/"include", Formula["uopenssl"].opt_include,
+    include_dirs = [HOMEBREW_PREFIX/"include", Formula["openssl"].opt_include,
                     Formula["sqlite"].opt_include]
-    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["uopenssl"].opt_lib,
+    library_dirs = [HOMEBREW_PREFIX/"lib", Formula["openssl"].opt_lib,
                     Formula["sqlite"].opt_lib]
-
-    if build.with? "sqlite"
-      include_dirs << Formula["usqlite"].opt_include
-      library_dirs << Formula["usqlite"].opt_lib
-    end
-
-    if build.with? "tcl-tk"
-      include_dirs << Formula["tcl-tk"].opt_include
-      library_dirs << Formula["tcl-tk"].opt_lib
-    end
 
     cfg = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/distutils/distutils.cfg"
 
@@ -327,8 +270,10 @@ class Python37 < Formula
           long_prefix = re.compile(r'#{rack}/[0-9\._abrc]+/Frameworks/Python\.framework/Versions/#{xy}/lib/python#{xy}/site-packages')
           sys.path = [long_prefix.sub('#{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}', p) for p in sys.path]
 
-          # Set the sys.executable to use the opt_prefix
-          sys.executable = '#{opt_bin}/python#{xy}'
+          # Set the sys.executable to use the opt_prefix, unless explicitly set
+          # with PYTHONEXECUTABLE:
+          if 'PYTHONEXECUTABLE' not in os.environ:
+              sys.executable = '#{opt_bin}/python#{xy}'
     EOS
   end
 
@@ -338,28 +283,15 @@ class Python37 < Formula
     else
       xy = version.to_s.slice(/(3\.\d)/) || "3.7"
     end
-    text = <<~EOS
-      Pip, setuptools, and wheel have been installed. To update them
-        pip3 install --upgrade pip setuptools wheel
-
+    <<~EOS
       You can install Python packages with
-        pip3 install <package>
+        pip3.7 install <package>
 
       They will install into the site-package directory
         #{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}
 
       See: https://docs.brew.sh/Homebrew-and-Python
     EOS
-
-    # Tk warning only for 10.6
-    tk_caveats = <<~EOS
-
-      Apple's Tcl/Tk is not recommended for use with Python on Mac OS X 10.6.
-      For more information see: https://www.python.org/download/mac/tcltk/
-    EOS
-
-    text += tk_caveats unless MacOS.version >= :lion
-    text
   end
 
   test do
@@ -370,56 +302,8 @@ class Python37 < Formula
     # Check if some other modules import. Then the linked libs are working.
     system "#{bin}/python#{xy}", "-c", "import tkinter; root = tkinter.Tk()"
     system "#{bin}/python#{xy}", "-c", "import _gdbm"
-    system bin/"pip3.7", "list"
+    system "#{bin}/python#{xy}", "-c", "import zlib"
+    system "#{bin}/python#{xy}", "-c", "import ssl"
+    system bin/"pip3.7", "list", "--format=columns"
   end
 end
-
-__END__
-diff --git a/setup.py b/setup.py
-index 2779658..902d0eb 100644
---- a/setup.py
-+++ b/setup.py
-@@ -1699,9 +1699,6 @@ class PyBuildExt(build_ext):
-         # Rather than complicate the code below, detecting and building
-         # AquaTk is a separate method. Only one Tkinter will be built on
-         # Darwin - either AquaTk, if it is found, or X11 based Tk.
--        if (host_platform == 'darwin' and
--            self.detect_tkinter_darwin(inc_dirs, lib_dirs)):
--            return
-
-         # Assume we haven't found any of the libraries or include files
-         # The versions with dots are used on Unix, and the versions without
-@@ -1747,22 +1744,6 @@ class PyBuildExt(build_ext):
-             if dir not in include_dirs:
-                 include_dirs.append(dir)
-
--        # Check for various platform-specific directories
--        if host_platform == 'sunos5':
--            include_dirs.append('/usr/openwin/include')
--            added_lib_dirs.append('/usr/openwin/lib')
--        elif os.path.exists('/usr/X11R6/include'):
--            include_dirs.append('/usr/X11R6/include')
--            added_lib_dirs.append('/usr/X11R6/lib64')
--            added_lib_dirs.append('/usr/X11R6/lib')
--        elif os.path.exists('/usr/X11R5/include'):
--            include_dirs.append('/usr/X11R5/include')
--            added_lib_dirs.append('/usr/X11R5/lib')
--        else:
--            # Assume default location for X11
--            include_dirs.append('/usr/X11/include')
--            added_lib_dirs.append('/usr/X11/lib')
--
-         # If Cygwin, then verify that X is installed before proceeding
-         if host_platform == 'cygwin':
-             x11_inc = find_file('X11/Xlib.h', [], include_dirs)
-@@ -1786,10 +1767,6 @@ class PyBuildExt(build_ext):
-         if host_platform in ['aix3', 'aix4']:
-             libs.append('ld')
-
--        # Finally, link with the X11 libraries (not appropriate on cygwin)
--        if host_platform != "cygwin":
--            libs.append('X11')
--
-         ext = Extension('_tkinter', ['_tkinter.c', 'tkappinit.c'],
-                         define_macros=[('WITH_APPINIT', 1)] + defs,
-                         include_dirs = include_dirs,

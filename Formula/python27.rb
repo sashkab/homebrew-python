@@ -3,48 +3,42 @@ class Python27 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/2.7.15/Python-2.7.15.tar.xz"
   sha256 "22d9b1ac5b26135ad2b8c2901a9413537e08749a753356ee913c84dbd2df5574"
-  revision 1
+  revision 2
   head "https://github.com/python/cpython.git", :branch => "2.7"
+
+  # setuptools remembers the build flags python is built with and uses them to
+  # build packages later. Xcode-only systems need different flags.
+  pour_bottle? do
+    reason <<~EOS
+      The bottle needs the Apple Command Line Tools to be installed.
+        You can install them, if desired, with:
+          xcode-select --install
+    EOS
+    satisfy { MacOS::CLT.installed? }
+  end
 
   keg_only :versioned_formula
 
-  # Please don't add a wide/ucs4 option as it won't be accepted.
-  # More details in: https://github.com/Homebrew/homebrew/pull/32368
-  option :universal
-  option "with-tcl-tk", "Use Homebrew's Tk instead of macOS Tk (has optional Cocoa and threads support)"
-
-  deprecated_option "with-brewed-tk" => "with-tcl-tk"
-
   depends_on "pkg-config" => :build
   depends_on "sphinx-doc" => :build if MacOS.version > :snow_leopard
-  depends_on "sashkab/universal/ugdbm"
-  depends_on "sashkab/universal/uopenssl"
-  depends_on "sashkab/universal/ureadline"
-  depends_on "sashkab/universal/usqlite"
-  depends_on "tcl-tk" => :optional
+  depends_on "gdbm"
+  depends_on "openssl"
+  depends_on "readline"
+  depends_on "sqlite"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.2.0.zip"
-    sha256 "47881d54ede4da9c15273bac65f9340f8929d4f0213193fa7894be384f2dcfa6"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.6.3.zip"
+    sha256 "3b474dad69c49f0d2d86696b68105f3a6f195f7ab655af12ef9a9c326d2b08f8"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-18.0.tar.gz"
-    sha256 "a0e11645ee37c90b40c46d607070c4fd583e2cd46231b1c06e389c5e814eed76"
+    url "https://www.pypi.org/packages/source/p/pip/pip-18.1.tar.gz"
+    sha256 "c0a292bd977ef590379a3f05d7b7f65135487b67470f6281289a94e015650ea1"
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.31.1.tar.gz"
-    sha256 "0a2e54558a0628f2145d2fc822137e322412115173e8a2ddbe1c9024338ae83c"
-  end
-
-  # Patch to disable the search for Tk.framework, since Homebrew's Tk is
-  # a plain unix build. Remove `-lX11`, too because our Tk is "AquaTk".
-  if build.with? "tcl-tk"
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/patches/42fcf22/python/brewed-tk-patch.diff"
-      sha256 "15c153bdfe51a98efe48f8e8379f5d9b5c6c4015e53d3f9364d23c8689857f09"
-    end
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.32.3.tar.gz"
+    sha256 "029703bf514e16c8271c3821806a1c171220cc5bdd325cbf4e7da1e056a01db6"
   end
 
   def lib_cellar
@@ -59,20 +53,7 @@ class Python27 < Formula
     prefix/"lib/python2.7/site-packages"
   end
 
-  # setuptools remembers the build flags python is built with and uses them to
-  # build packages later. Xcode-only systems need different flags.
-  pour_bottle? do
-    reason <<~EOS
-      The bottle needs the Apple Command Line Tools to be installed.
-        You can install them, if desired, with:
-          xcode-select --install
-    EOS
-    satisfy { MacOS::CLT.installed? }
-  end
-
   def install
-    ENV.permit_weak_imports
-
     # Unset these so that installing pip and setuptools puts them where we want
     # and not into some other Python the user has installed.
     ENV["PYTHONHOME"] = nil
@@ -102,16 +83,21 @@ class Python27 < Formula
     ldflags  = []
     cppflags = []
 
-    unless MacOS::CLT.installed?
-      # Help Python's build system (setuptools/pip) to build things on Xcode-only systems
+    if MacOS.sdk_path_if_needed
+      # Help Python's build system (setuptools/pip) to build things on SDK-based systems
       # The setup.py looks at "-isysroot" to get the sysroot (and not at --sysroot)
-      cflags   << "-isysroot #{MacOS.sdk_path}"
-      ldflags  << "-isysroot #{MacOS.sdk_path}"
-      cppflags << "-I#{MacOS.sdk_path}/usr/include" # find zlib
-      # For the Xlib.h, Python needs this header dir with the system Tk
-      if build.without? "tcl-tk"
-        cflags << "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
+      cflags  << "-isysroot #{MacOS.sdk_path}"
+      ldflags << "-isysroot #{MacOS.sdk_path}"
+
+      if MacOS.version == :mojave
+        cflags << "-I/usr/include"
+      else
+        cflags << "-I#{MacOS.sdk_path}/usr/include"
       end
+      # For the Xlib.h, Python needs this header dir with the system Tk
+      # Yep, this needs the absolute path where zlib needed a path relative
+      # to the SDK.
+      cflags  << "-I#{MacOS.sdk_path}/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
     end
 
     # Avoid linking to libgcc https://code.activestate.com/lists/python-dev/112195/
@@ -121,13 +107,8 @@ class Python27 < Formula
     # superenv handles that cc finds includes/libs!
     inreplace "setup.py" do |s|
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
-              "do_readline = '#{Formula["ureadline"].opt_lib}/libhistory.dylib'"
-      s.gsub! "/usr/local/ssl", Formula["uopenssl"].opt_prefix
-    end
-
-    if build.universal?
-      ENV.universal_binary
-      args << "--enable-universalsdk=/" << "--with-universal-archs=intel"
+              "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
+      s.gsub! "/usr/local/ssl", Formula["openssl"].opt_prefix
     end
 
     inreplace "setup.py" do |s|
@@ -148,18 +129,11 @@ class Python27 < Formula
       f.gsub! "DEFAULT_FRAMEWORK_FALLBACK = [", "DEFAULT_FRAMEWORK_FALLBACK = [ '#{frameworks}',"
     end
 
-    if build.with? "tcl-tk"
-      tcl_tk = Formula["tcl-tk"].opt_prefix
-      cppflags << "-I#{tcl_tk}/include"
-      ldflags  << "-L#{tcl_tk}/lib"
-    end
-
     args << "CFLAGS=#{cflags.join(" ")}" unless cflags.empty?
     args << "LDFLAGS=#{ldflags.join(" ")}" unless ldflags.empty?
     args << "CPPFLAGS=#{cppflags.join(" ")}" unless cppflags.empty?
 
     system "./configure", *args
-
     system "make"
 
     ENV.deparallelize do
@@ -234,22 +208,11 @@ class Python27 < Formula
     (libexec/"pip").cd { system "#{bin}/python", *setup_args }
     (libexec/"wheel").cd { system "#{bin}/python", *setup_args }
 
-    # When building from source, these symlinks will not exist, since
-    # post_install happens after linking.
-    %w[pip pip2 pip2.7 easy_install easy_install-2.7 wheel].each do |e|
-      (prefix/"bin").install_symlink bin/e
-    end
-
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [prefix/"include", Formula["uopenssl"].opt_include,
-                    Formula["usqlite"].opt_include]
-    library_dirs = [prefix/"lib", Formula["uopenssl"].opt_lib,
-                    Formula["usqlite"].opt_include]
-
-    if build.with? "tcl-tk"
-      include_dirs << Formula["tcl-tk"].opt_include
-      library_dirs << Formula["tcl-tk"].opt_lib
-    end
+    include_dirs = [prefix/"include", Formula["openssl"].opt_include,
+                    Formula["sqlite"].opt_include]
+    library_dirs = [prefix/"lib", Formula["openssl"].opt_lib,
+                    Formula["sqlite"].opt_include]
 
     cfg = lib_cellar/"distutils/distutils.cfg"
     cfg.atomic_write <<~EOS
@@ -314,7 +277,7 @@ class Python27 < Formula
 
   def caveats
     <<~EOS
-      This formula installs a universal python executable to #{opt_bin}.
+      This formula installs a python executable to #{opt_bin}.
       If you wish to have this formula's `python`, `python-config`, `pip` etc.
       executables in your PATH then add the following to #{shell_profile}:
           export PATH="#{opt_bin}:$PATH"
@@ -343,6 +306,8 @@ class Python27 < Formula
     # Check if some other modules import. Then the linked libs are working.
     system "#{bin}/python", "-c", "import Tkinter; root = Tkinter.Tk()"
     system "#{bin}/python", "-c", "import gdbm"
-    system bin/"pip", "list"
+    system "#{bin}/python", "-c", "import zlib"
+    system "#{bin}/python", "-c", "import ssl"
+    system "#{bin}/pip", "list"
   end
 end
