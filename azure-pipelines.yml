@@ -1,0 +1,21 @@
+jobs:
+- job: macOS
+  pool:
+    vmImage: xcode10-macos10.13
+  steps:
+    - bash: |
+        sudo xcode-select --switch /Applications/Xcode_10.app/Contents/Developer
+        brew update
+        HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/sashkab/azuretest"
+        mkdir -p "$HOMEBREW_TAP_DIR"
+        rm -rf "$HOMEBREW_TAP_DIR"
+        ln -s "$PWD" "$HOMEBREW_TAP_DIR"
+        brew test-bot --debug --fail-fast --verbose
+      displayName: Run brew test-bot
+
+    - task: PublishTestResults@2
+      displayName: Publish test-bot test results
+      condition: succeededOrFailed()
+      inputs:
+        testRunner: JUnit
+        testResultsFiles: brew-test-bot.xml
