@@ -3,6 +3,7 @@ class Python37 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tar.xz"
   sha256 "d83fe8ce51b1bb48bbcf0550fd265b9a75cdfdfa93f916f9e700aef8444bf1bb"
+  revision 1
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
@@ -26,11 +27,6 @@ class Python37 < Formula
 
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7"
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6", "bin/easy_install-3.7"
-
-  fails_with :clang do
-    build 425
-    cause "https://bugs.python.org/issue24844"
-  end
 
   resource "setuptools" do
     url "https://pypi.org/packages/source/s/setuptools/setuptools-40.6.3.zip"
