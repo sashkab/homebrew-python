@@ -47,7 +47,7 @@ virtualenv -p /usr/local/opt/python27/bin/python2.7 <path to venv>
 
 ### Python 3.X
 
-Replace `X` in example below with either `3` for Python 3.3, `4` for Python 3.4, `5` for Python 3.5, `6` for Python 3.6, or `7` for Python 3.7.
+Replace `X` in example below with either `5` for Python 3.5, `6` for Python 3.6, or `7` for Python 3.7.
 
 ```bash
 brew install sashkab/python/python3X
