@@ -15,5 +15,6 @@ jobs:
         brew --version
         brew doctor
         brew test-bot
+        for x in "$HOMEBREW_TAP_DIR/Formula/*.rb"; do brew audit "$x"; done
 
       displayName: Run brew test-bot
