@@ -1,9 +1,9 @@
 class Python35 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.5.6/Python-3.5.6.tar.xz"
-  sha256 "f55cde04f521f273c7cba08912921cc5642cfc15ca7b22d5829f0aff4371155f"
-  revision 2
+  url "https://www.python.org/ftp/python/3.5.7/Python-3.5.7.tar.xz"
+  sha256 "285892899bf4d5737fd08482aa6171c6b2564a45b9102dfacfb72826aebdc7dc"
+  head "https://github.com/python/cpython.git", :branch => "3.5"
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
