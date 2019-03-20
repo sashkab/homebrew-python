@@ -3,6 +3,7 @@ class Python35 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.5.7/Python-3.5.7.tar.xz"
   sha256 "285892899bf4d5737fd08482aa6171c6b2564a45b9102dfacfb72826aebdc7dc"
+  revision 1
   head "https://github.com/python/cpython.git", :branch => "3.5"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -35,7 +36,7 @@ class Python35 < Formula
 
   resource "pip" do
     url "https://www.pypi.org/packages/source/p/pip/pip-19.0.3.tar.gz"
-    sha256 "c0a292bd977ef590379a3f05d7b7f65135487b67470f6281289a94e015650ea1"
+    sha256 "6e6f197a1abfb45118dbb878b5c859a0edbdd33fd250100bc015b67fded4b9f2"
   end
 
   resource "wheel" do

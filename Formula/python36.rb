@@ -3,7 +3,8 @@ class Python36 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz"
   sha256 "35446241e995773b1bed7d196f4b624dadcadc8429f26282e756b2fb8a351193"
-  revision 1
+  revision 2
+  head "https://github.com/python/cpython.git", :branch => "3.6"
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
@@ -35,7 +36,7 @@ class Python36 < Formula
 
   resource "pip" do
     url "https://www.pypi.org/packages/source/p/pip/pip-19.0.3.tar.gz"
-    sha256 "c0a292bd977ef590379a3f05d7b7f65135487b67470f6281289a94e015650ea1"
+    sha256 "6e6f197a1abfb45118dbb878b5c859a0edbdd33fd250100bc015b67fded4b9f2"
   end
 
   resource "wheel" do
