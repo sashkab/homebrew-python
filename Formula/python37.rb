@@ -1,9 +1,8 @@
 class Python37 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tar.xz"
-  sha256 "d83fe8ce51b1bb48bbcf0550fd265b9a75cdfdfa93f916f9e700aef8444bf1bb"
-  revision 2
+  url "https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz"
+  sha256 "da60b54064d4cfcd9c26576f6df2690e62085123826cff2e667e72a91952d318"
   head "https://github.com/python/cpython.git", :branch => "3.7"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -30,8 +29,8 @@ class Python37 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6", "bin/easy_install-3.7"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.8.0.zip"
-    sha256 "6e4eec90337e849ade7103723b9a99631c1f0d19990d6e8412dc42f5ae8b304d"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.9.0.zip"
+    sha256 "06ebb20a85510e7184a5bd9b0f45c8c104dfe656464d70ecd9b7a0154eb915ae"
   end
 
   resource "pip" do
