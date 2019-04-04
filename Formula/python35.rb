@@ -30,8 +30,8 @@ class Python35 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.8.0.zip"
-    sha256 "6e4eec90337e849ade7103723b9a99631c1f0d19990d6e8412dc42f5ae8b304d"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-40.9.0.zip"
+    sha256 "06ebb20a85510e7184a5bd9b0f45c8c104dfe656464d70ecd9b7a0154eb915ae"
   end
 
   resource "pip" do
