@@ -3,7 +3,7 @@ class Python27 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/2.7.16/Python-2.7.16.tar.xz"
   sha256 "f222ef602647eecb6853681156d32de4450a2c39f4de93bd5b20235f2e660ed7"
-  revision 1
+  revision 2
   head "https://github.com/python/cpython.git", :branch => "2.7"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -20,7 +20,6 @@ class Python27 < Formula
   keg_only :versioned_formula
 
   depends_on "pkg-config" => :build
-  depends_on "sphinx-doc" => :build
   depends_on "gdbm"
   depends_on "openssl"
   depends_on "readline"
@@ -166,10 +165,6 @@ class Python27 < Formula
     (libexec/"pip").install resource("pip")
     (libexec/"wheel").install resource("wheel")
 
-    cd "Doc" do
-      system "make", "html"
-      doc.install Dir["build/html/*"]
-    end
   end
 
   def post_install
