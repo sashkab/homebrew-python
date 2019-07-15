@@ -1,8 +1,8 @@
 class Python36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.6.8/Python-3.6.8.tar.xz"
-  sha256 "35446241e995773b1bed7d196f4b624dadcadc8429f26282e756b2fb8a351193"
+  url "https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tar.xz"
+  sha256 "5e2f5f554e3f8f7f0296f7e73d8600c4e9acbaee6b2555b83206edf5153870da"
   revision 2
   head "https://github.com/python/cpython.git", :branch => "3.6"
 
