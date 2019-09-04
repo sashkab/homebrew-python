@@ -3,7 +3,7 @@ class Python27 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/2.7.16/Python-2.7.16.tar.xz"
   sha256 "f222ef602647eecb6853681156d32de4450a2c39f4de93bd5b20235f2e660ed7"
-  revision 2
+  revision 3
   head "https://github.com/python/cpython.git", :branch => "2.7"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -21,7 +21,7 @@ class Python27 < Formula
 
   depends_on "pkg-config" => :build
   depends_on "gdbm"
-  depends_on "openssl"
+  depends_on "openssl@1.1"
   depends_on "readline"
   depends_on "sqlite"
 
@@ -103,12 +103,12 @@ class Python27 < Formula
     # Avoid linking to libgcc https://code.activestate.com/lists/python-dev/112195/
     args << "MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}"
 
-    # We want our readline and openssl! This is just to outsmart the detection code,
+    # We want our readline and openssl@1.1! This is just to outsmart the detection code,
     # superenv handles that cc finds includes/libs!
     inreplace "setup.py" do |s|
       s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
               "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
-      s.gsub! "/usr/local/ssl", Formula["openssl"].opt_prefix
+      s.gsub! "/usr/local/ssl", Formula["openssl@1.1"].opt_prefix
     end
 
     inreplace "setup.py" do |s|
@@ -203,9 +203,9 @@ class Python27 < Formula
     (libexec/"wheel").cd { system "#{bin}/python", *setup_args }
 
     # Help distutils find brewed stuff when building extensions
-    include_dirs = [prefix/"include", Formula["openssl"].opt_include,
+    include_dirs = [prefix/"include", Formula["openssl@1.1"].opt_include,
                     Formula["sqlite"].opt_include]
-    library_dirs = [prefix/"lib", Formula["openssl"].opt_lib,
+    library_dirs = [prefix/"lib", Formula["openssl@1.1"].opt_lib,
                     Formula["sqlite"].opt_include]
 
     cfg = lib_cellar/"distutils/distutils.cfg"
