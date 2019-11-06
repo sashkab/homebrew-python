@@ -1,9 +1,10 @@
-class Python35 < Formula
+class PythonAT36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz"
-  sha256 "c24a37c63a67f53bdd09c5f287b5cff8e8b98f857bf348c577d454d3f74db049"
-  head "https://github.com/python/cpython.git", :branch => "3.5"
+  url "https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tar.xz"
+  sha256 "5e2f5f554e3f8f7f0296f7e73d8600c4e9acbaee6b2555b83206edf5153870da"
+  revision 3
+  head "https://github.com/python/cpython.git", :branch => "3.6"
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
@@ -25,8 +26,8 @@ class Python35 < Formula
   depends_on "sqlite"
   depends_on "xz"
 
-  skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5"
-  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5"
+  skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6"
+  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
     url "https://pypi.org/packages/source/s/setuptools/setuptools-41.6.0.zip"
@@ -123,7 +124,7 @@ class Python35 < Formula
     end
 
     # Any .app get a " 3" attached, so it does not conflict with python 2.x.
-    Dir.glob("#{prefix}/*.app") { |app| mv app, app.sub(/\.app$/, " 3.5.app") }
+    Dir.glob("#{prefix}/*.app") { |app| mv app, app.sub(/\.app$/, " 3.6.app") }
 
     # Prevent third-party packages from building against fragile Cellar paths
     inreplace Dir[lib_cellar/"**/_sysconfigdata_m_darwin_darwin.py",
@@ -189,7 +190,7 @@ class Python35 < Formula
 
     %w[setuptools pip wheel].each do |pkg|
       (libexec/pkg).cd do
-        system bin/"python3.5", "-s", "setup.py", "--no-user-cfg", "install",
+        system bin/"python3.6", "-s", "setup.py", "--no-user-cfg", "install",
                "--force", "--verbose", "--install-scripts=#{bin}",
                "--install-lib=#{site_packages}",
                "--single-version-externally-managed",
@@ -210,7 +211,7 @@ class Python35 < Formula
     end
 
     # post_install happens after link
-    %W[pip3.5 pip#{xy} easy_install-#{xy} wheel3].each do |e|
+    %W[pip3.6 pip#{xy} easy_install-#{xy} wheel3].each do |e|
       (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
@@ -278,11 +279,11 @@ class Python35 < Formula
     if prefix.exist?
       xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
     else
-      xy = version.to_s.slice(/(3\.\d)/) || "3.5"
+      xy = version.to_s.slice(/(3\.\d)/) || "3.6"
     end
     <<~EOS
       You can install Python packages with
-        pip3.5 install <package>
+        pip3.6 install <package>
 
       They will install into the site-package directory
         #{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}
@@ -301,6 +302,6 @@ class Python35 < Formula
     system "#{bin}/python#{xy}", "-c", "import _gdbm"
     system "#{bin}/python#{xy}", "-c", "import zlib"
     system "#{bin}/python#{xy}", "-c", "import ssl"
-    system bin/"pip3.5", "list", "--format=columns"
+    system bin/"pip3.6", "list", "--format=columns"
   end
 end

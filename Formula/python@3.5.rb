@@ -1,9 +1,9 @@
-class Python37 < Formula
+class PythonAT35 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.7.5/Python-3.7.5.tar.xz"
-  sha256 "e85a76ea9f3d6c485ec1780fca4e500725a4a7bbc63c78ebc44170de9b619d94"
-  head "https://github.com/python/cpython.git", :branch => "3.7"
+  url "https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz"
+  sha256 "c24a37c63a67f53bdd09c5f287b5cff8e8b98f857bf348c577d454d3f74db049"
+  head "https://github.com/python/cpython.git", :branch => "3.5"
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
@@ -25,8 +25,8 @@ class Python37 < Formula
   depends_on "sqlite"
   depends_on "xz"
 
-  skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7"
-  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6", "bin/easy_install-3.7"
+  skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5"
+  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5"
 
   resource "setuptools" do
     url "https://pypi.org/packages/source/s/setuptools/setuptools-41.6.0.zip"
@@ -61,7 +61,6 @@ class Python37 < Formula
       --enable-loadable-sqlite-extensions
       --without-ensurepip
       --with-dtrace
-      --with-openssl=#{Formula["openssl@1.1"].opt_prefix}
     ]
 
     args << "--without-gcc" if ENV.compiler == :clang
@@ -88,11 +87,13 @@ class Python37 < Formula
     # Avoid linking to libgcc https://mail.python.org/pipermail/python-dev/2012-February/116205.html
     args << "MACOSX_DEPLOYMENT_TARGET=#{MacOS.version}"
 
-    # We want our readline! This is just to outsmart the detection code,
+    # We want our readline and openssl@1.1! This is just to outsmart the detection code,
     # superenv makes cc always find includes/libs!
-    inreplace "setup.py",
-      "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
-      "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
+    inreplace "setup.py" do |s|
+      s.gsub! "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')",
+              "do_readline = '#{Formula["readline"].opt_lib}/libhistory.dylib'"
+      s.gsub! "/usr/local/ssl", Formula["openssl@1.1"].opt_prefix
+    end
 
     inreplace "setup.py" do |s|
       s.gsub! "sqlite_setup_debug = False", "sqlite_setup_debug = True"
@@ -122,7 +123,7 @@ class Python37 < Formula
     end
 
     # Any .app get a " 3" attached, so it does not conflict with python 2.x.
-    Dir.glob("#{prefix}/*.app") { |app| mv app, app.sub(/\.app$/, " 3.7.app") }
+    Dir.glob("#{prefix}/*.app") { |app| mv app, app.sub(/\.app$/, " 3.5.app") }
 
     # Prevent third-party packages from building against fragile Cellar paths
     inreplace Dir[lib_cellar/"**/_sysconfigdata_m_darwin_darwin.py",
@@ -188,7 +189,7 @@ class Python37 < Formula
 
     %w[setuptools pip wheel].each do |pkg|
       (libexec/pkg).cd do
-        system bin/"python3.7", "-s", "setup.py", "--no-user-cfg", "install",
+        system bin/"python3.5", "-s", "setup.py", "--no-user-cfg", "install",
                "--force", "--verbose", "--install-scripts=#{bin}",
                "--install-lib=#{site_packages}",
                "--single-version-externally-managed",
@@ -209,7 +210,7 @@ class Python37 < Formula
     end
 
     # post_install happens after link
-    %W[pip3.7 pip#{xy} easy_install-#{xy} wheel3].each do |e|
+    %W[pip3.5 pip#{xy} easy_install-#{xy} wheel3].each do |e|
       (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
@@ -277,11 +278,11 @@ class Python37 < Formula
     if prefix.exist?
       xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
     else
-      xy = version.to_s.slice(/(3\.\d)/) || "3.7"
+      xy = version.to_s.slice(/(3\.\d)/) || "3.5"
     end
     <<~EOS
       You can install Python packages with
-        pip3.7 install <package>
+        pip3.5 install <package>
 
       They will install into the site-package directory
         #{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}
@@ -300,6 +301,6 @@ class Python37 < Formula
     system "#{bin}/python#{xy}", "-c", "import _gdbm"
     system "#{bin}/python#{xy}", "-c", "import zlib"
     system "#{bin}/python#{xy}", "-c", "import ssl"
-    system bin/"pip3.7", "list", "--format=columns"
+    system bin/"pip3.5", "list", "--format=columns"
   end
 end
