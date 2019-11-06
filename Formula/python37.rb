@@ -1,9 +1,8 @@
 class Python37 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz"
-  sha256 "fb799134b868199930b75f26678f18932214042639cd52b16da7fd134cd9b13f"
-  revision 1
+  url "https://www.python.org/ftp/python/3.7.5/Python-3.7.5.tar.xz"
+  sha256 "e85a76ea9f3d6c485ec1780fca4e500725a4a7bbc63c78ebc44170de9b619d94"
   head "https://github.com/python/cpython.git", :branch => "3.7"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -30,13 +29,13 @@ class Python37 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6", "bin/easy_install-3.7"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-41.2.0.zip"
-    sha256 "66b86bbae7cc7ac2e867f52dc08a6bd064d938bac59dfec71b9b565dd36d6012"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-41.6.0.zip"
+    sha256 "6afa61b391dcd16cb8890ec9f66cc4015a8a31a6e1c2b4e0c464514be1a3d722"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-19.2.3.tar.gz"
-    sha256 "e7a31f147974362e6c82d84b91c7f2bdf57e4d3163d3d454e6c3e71944d67135"
+    url "https://www.pypi.org/packages/source/p/pip/pip-19.3.1.tar.gz"
+    sha256 "21207d76c1031e517668898a6b46a9fb1501c7a4710ef5dfd6a40ad9e6757ea7"
   end
 
   resource "wheel" do
