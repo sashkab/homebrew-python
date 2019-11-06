@@ -164,7 +164,6 @@ class Python27 < Formula
     (libexec/"setuptools").install resource("setuptools")
     (libexec/"pip").install resource("pip")
     (libexec/"wheel").install resource("wheel")
-
   end
 
   def post_install
