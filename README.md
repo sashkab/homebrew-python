@@ -10,6 +10,7 @@ Python 2.7     | 2.7.16
 Python 3.5     | 3.5.7
 Python 3.6     | 3.6.9
 Python 3.7     | 3.7.4
+Python 3.8     | 3.8.0
 
 ### Universal support -- Deprecation notice
 
@@ -52,6 +53,13 @@ Replace `X` in example below with either `5` for Python 3.5, `6` for Python 3.6,
 ```bash
 brew install sashkab/python/python3X
 pip3.X install -U pip setuptools
+```
+
+### Python 3.8
+
+```bash
+brew install sashkab/python/python@3.8
+pip3.8 install -U pip setuptools
 ```
 
 ## Acknowledgement
