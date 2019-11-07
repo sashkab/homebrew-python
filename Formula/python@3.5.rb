@@ -1,4 +1,4 @@
-class Python35 < Formula
+class PythonAT35 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz"

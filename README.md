@@ -18,7 +18,7 @@ Python 3.8     | 3.8.0
 brew install sashkab/python/pythonXY
 ```
 
-Or
+or
 
 ```bash
 brew tap sashkab/python
@@ -27,43 +27,36 @@ brew install pythonXY
 
 ### Python 2.7
 
-Python 2.7 will be installed into `/usr/local/opt/python27`, as a keg, i.e without linking into `/usr/local/bin` in order to avoid conflicts with the python formulae.
+Python 2.7 will be installed into `/usr/local/opt/python@2.7`, as a keg, i.e without linking into `/usr/local/bin` in order to avoid conflicts with the python formulae.
 
-**python27 formulae will be removed on or around January 1, 2020**, see [#46][46] for details.
+**python@2.7 formulae will be removed on or around January 1, 2020**, see [#46][46] for details.
 
 ```bash
-brew install sashkab/python/python27
-/usr/local/opt/python27/bin/pip2.7 install -U pip setuptools
+brew install sashkab/python/python@2.7
+/usr/local/opt/python@2.7/bin/pip2.7 install -U pip setuptools
 ```
 
 You can use it to create a virtual environment by passing full path to the Python executable:
 
 ```bash
-virtualenv -p /usr/local/opt/python27/bin/python2.7 <path to venv>
+virtualenv -p /usr/local/opt/python@2.7/bin/python2.7 <path to venv>
 ```
 
 ### Python 3.X
 
-Replace `X` in example below with either `5` for Python 3.5, `6` for Python 3.6, or `7` for Python 3.7.
+Replace `X` in example below with either `5` for Python 3.5, `6` for Python 3.6, `7` for Python 3.7, or `8` for Python 3.8.
+
+Python 3.8 will be installed into `/usr/local/opt/python@3.X`, as a keg, i.e without linking into `/usr/local/bin` in order to avoid conflicts with the python formulae.
 
 ```bash
-brew install sashkab/python/python3X
+brew install sashkab/python/python@3.X
 pip3.X install -U pip setuptools
-```
-
-### Python 3.8
-
-Python 3.8 will be installed into `/usr/local/opt/python@3.8`, as a keg, i.e without linking into `/usr/local/bin` in order to avoid conflicts with the python formulae.
-
-```bash
-brew install sashkab/python/python@3.8
-pip3.8 install -U pip setuptools
 ```
 
 You can use it to create a virtual environment by passing full path to the Python executable:
 
 ```bash
-/usr/local/opt/python@3.8/bin/python3.8 -mvenv <path to venv>
+/usr/local/opt/python@3.X/bin/python3.X -mvenv <path to venv>
 ```
 
 ## Acknowledgement
