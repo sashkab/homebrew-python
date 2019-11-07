@@ -39,13 +39,6 @@ class PythonAT27 < Formula
     sha256 "10c9da68765315ed98850f8e048347c3eb06dd81822dc2ab1d4fde9dc9702646"
   end
 
-  # Fixes finding zlib from within the CLT SDK.
-  # https://bugs.python.org/issue37285
-  patch do
-    url "https://raw.githubusercontent.com/Homebrew/formula-patches/519bb6f33c6d5948b1dbae0964599028b9a3a995/python%402/clt-sdk-path-lookup.patch"
-    sha256 "b8b82f7ef45054aca02ce5e24b0f8dd0b6d5cbc4142707ffd1d720ff6ace2162"
-  end
-
   def lib_cellar
     prefix/"Frameworks/Python.framework/Versions/2.7/lib/python2.7"
   end
