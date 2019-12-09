@@ -123,7 +123,7 @@ class PythonAT38 < Formula
     Dir.glob("#{prefix}/*.app") { |app| mv app, app.sub(/\.app$/, " 3.8.app") }
 
     # Prevent third-party packages from building against fragile Cellar paths
-    inreplace Dir[lib_cellar/"**/_sysconfigdata_m_darwin_darwin.py",
+    inreplace Dir[lib_cellar/"**/_sysconfigdata__darwin_darwin.py",
                   lib_cellar/"config*/Makefile",
                   frameworks/"Python.framework/Versions/3*/lib/pkgconfig/python-3.?.pc"],
               prefix, opt_prefix
@@ -134,7 +134,7 @@ class PythonAT38 < Formula
               "LINKFORSHARED=\\1PYTHONFRAMEWORKINSTALLDIR\\2"
 
     # Fix for https://github.com/Homebrew/homebrew-core/issues/21212
-    inreplace Dir[lib_cellar/"**/_sysconfigdata_m_darwin_darwin.py"],
+    inreplace Dir[lib_cellar/"**/_sysconfigdata__darwin_darwin.py"],
               %r{('LINKFORSHARED': .*?)'(Python.framework/Versions/3.\d+/Python)'}m,
               "\\1'#{opt_prefix}/Frameworks/\\2'"
 
