@@ -137,7 +137,7 @@ class PythonAT35 < Formula
               "LINKFORSHARED=\\1PYTHONFRAMEWORKINSTALLDIR\\2"
 
     # Fix for https://github.com/Homebrew/homebrew-core/issues/21212
-    inreplace Dir[lib_cellar/"**/_sysconfigdata_m_darwin_darwin.py"],
+    inreplace Dir[lib_cellar/"**/_sysconfigdata.py"],
               %r{('LINKFORSHARED': .*?)'(Python.framework/Versions/3.\d+/Python)'}m,
               "\\1'#{opt_prefix}/Frameworks/\\2'"
 
