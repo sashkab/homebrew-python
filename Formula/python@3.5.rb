@@ -29,8 +29,8 @@ class PythonAT35 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-41.6.0.zip"
-    sha256 "6afa61b391dcd16cb8890ec9f66cc4015a8a31a6e1c2b4e0c464514be1a3d722"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-42.0.2.zip"
+    sha256 "c5b372090d7c8709ce79a6a66872a91e518f7d65af97fca78135e1cb10d4b940"
   end
 
   resource "pip" do
@@ -137,7 +137,7 @@ class PythonAT35 < Formula
               "LINKFORSHARED=\\1PYTHONFRAMEWORKINSTALLDIR\\2"
 
     # Fix for https://github.com/Homebrew/homebrew-core/issues/21212
-    inreplace Dir[lib_cellar/"**/_sysconfigdata_m_darwin_darwin.py"],
+    inreplace Dir[lib_cellar/"**/_sysconfigdata.py"],
               %r{('LINKFORSHARED': .*?)'(Python.framework/Versions/3.\d+/Python)'}m,
               "\\1'#{opt_prefix}/Frameworks/\\2'"
 
