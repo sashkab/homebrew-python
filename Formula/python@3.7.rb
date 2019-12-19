@@ -1,8 +1,8 @@
 class PythonAT37 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.7.5/Python-3.7.5.tar.xz"
-  sha256 "e85a76ea9f3d6c485ec1780fca4e500725a4a7bbc63c78ebc44170de9b619d94"
+  url "https://www.python.org/ftp/python/3.7.6/Python-3.7.6.tar.xz"
+  sha256 "55a2cce72049f0794e9a11a84862e9039af9183603b78bc60d89539f82cf533f"
   head "https://github.com/python/cpython.git", :branch => "3.7"
 
   # setuptools remembers the build flags python is built with and uses them to
