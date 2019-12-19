@@ -1,8 +1,8 @@
 class PythonAT36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.6.9/Python-3.6.9.tar.xz"
-  sha256 "5e2f5f554e3f8f7f0296f7e73d8600c4e9acbaee6b2555b83206edf5153870da"
+  url "https://www.python.org/ftp/python/3.6.10/Python-3.6.10.tar.xz"
+  sha256 "0a833c398ac8cd7c5538f7232d8531afef943c60495c504484f308dac3af40de"
   head "https://github.com/python/cpython.git", :branch => "3.6"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -29,8 +29,8 @@ class PythonAT36 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-41.6.0.zip"
-    sha256 "6afa61b391dcd16cb8890ec9f66cc4015a8a31a6e1c2b4e0c464514be1a3d722"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-42.0.2.zip"
+    sha256 "c5b372090d7c8709ce79a6a66872a91e518f7d65af97fca78135e1cb10d4b940"
   end
 
   resource "pip" do
