@@ -8,9 +8,9 @@ Python Version | Latest revision
 ---------------|----------------
 Python 2.7     | 2.7.17
 Python 3.5     | 3.5.9
-Python 3.6     | 3.6.9
-Python 3.7     | 3.7.5
-Python 3.8     | 3.8.0
+Python 3.6     | 3.6.10
+Python 3.7     | 3.7.6
+Python 3.8     | 3.8.1
 
 ## Installing formulae
 
@@ -25,7 +25,7 @@ brew tap sashkab/python
 brew install python@X.Y
 ```
 
-Where `X` is major version of Python `2` or `3`, and `Y` is minor.
+Where `X` is a major version of Python `2` or `3`, and `Y` is minor.
 
 ### Python 2.7
 
