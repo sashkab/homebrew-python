@@ -71,13 +71,8 @@ class PythonAT38 < Formula
     if MacOS.sdk_path_if_needed
       # Help Python's build system (setuptools/pip) to build things on SDK-based systems
       # The setup.py looks at "-isysroot" to get the sysroot (and not at --sysroot)
-      cflags  << "-isysroot #{MacOS.sdk_path}"
+      cflags  << "-isysroot #{MacOS.sdk_path}" << "-I#{MacOS.sdk_path}/usr/include"
       ldflags << "-isysroot #{MacOS.sdk_path}"
-
-      if DevelopmentTools.clang_build_version < 1000
-        cflags  << "-I/usr/include" # find zlib
-      end
-
       # For the Xlib.h, Python needs this header dir with the system Tk
       # Yep, this needs the absolute path where zlib needed a path relative
       # to the SDK.
@@ -138,12 +133,6 @@ class PythonAT38 < Formula
               %r{('LINKFORSHARED': .*?)'(Python.framework/Versions/3.\d+/Python)'}m,
               "\\1'#{opt_prefix}/Frameworks/\\2'"
 
-    # A fix, because python and python3 both want to install Python.framework
-    # and therefore we can't link both into HOMEBREW_PREFIX/Frameworks
-    # https://github.com/Homebrew/homebrew/issues/15943
-    ["Headers", "Python", "Resources"].each { |f| rm(prefix/"Frameworks/Python.framework/#{f}") }
-    rm prefix/"Frameworks/Python.framework/Versions/Current"
-
     # Symlink the pkgconfig files into HOMEBREW_PREFIX so they're accessible.
     (lib/"pkgconfig").install_symlink Dir["#{frameworks}/Python.framework/Versions/#{xy}/lib/pkgconfig/*"]
 
@@ -152,6 +141,16 @@ class PythonAT38 < Formula
 
     %w[setuptools pip wheel].each do |r|
       (libexec/r).install resource(r)
+    end
+
+    # Install unversioned symlinks in libexec/bin.
+    {
+      "idle"          => "idle3.8",
+      "pydoc"         => "pydoc3.8",
+      "python"        => "python3.8",
+      "python-config" => "python3.8-config",
+    }.each do |unversioned_name, versioned_name|
+      (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
     end
   end
 
@@ -222,7 +221,6 @@ class PythonAT38 < Formula
     cfg.atomic_write <<~EOS
       [install]
       prefix=#{HOMEBREW_PREFIX}
-
       [build_ext]
       include_dirs=#{include_dirs.join ":"}
       library_dirs=#{library_dirs.join ":"}
@@ -239,7 +237,6 @@ class PythonAT38 < Formula
       import re
       import os
       import sys
-
       if sys.version_info[0] != 3:
           # This can only happen if the user has set the PYTHONPATH for 3.x and run Python 2.x or vice versa.
           # Every Python looks at the PYTHONPATH variable and we can't fix it here in sitecustomize.py,
@@ -249,7 +246,6 @@ class PythonAT38 < Formula
           exit('Your PYTHONPATH points to a site-packages dir for Python 3.x but you are running Python ' +
                str(sys.version_info[0]) + '.x!\\n     PYTHONPATH is currently: "' + str(os.environ['PYTHONPATH']) + '"\\n' +
                '     You should `unset PYTHONPATH` to fix this.')
-
       # Only do this for a brewed python:
       if os.path.realpath(sys.executable).startswith('#{rack}'):
           # Shuffle /Library site-packages to the end of sys.path
@@ -258,12 +254,10 @@ class PythonAT38 < Formula
           sys.path = [p for p in sys.path if not p.startswith(library_site)]
           # .pth files have already been processed so don't use addsitedir
           sys.path.extend(library_packages)
-
           # the Cellar site-packages is a symlink to the HOMEBREW_PREFIX
           # site_packages; prefer the shorter paths
           long_prefix = re.compile(r'#{rack}/[0-9\._abrc]+/Frameworks/Python\.framework/Versions/#{xy}/lib/python#{xy}/site-packages')
           sys.path = [long_prefix.sub('#{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}', p) for p in sys.path]
-
           # Set the sys.executable to use the opt_prefix, unless explicitly set
           # with PYTHONEXECUTABLE:
           if 'PYTHONEXECUTABLE' not in os.environ:
@@ -278,11 +272,13 @@ class PythonAT38 < Formula
       xy = version.to_s.slice(/(3\.\d)/) || "3.8"
     end
     <<~EOS
-      You can install Python packages with
-        pip3.8 install <package>
+      Python has been installed as
+        #{opt_bin}/python3.8
 
+      You can install Python packages with
+        #{opt_bin}/pip3.8 install <package>
       They will install into the site-package directory
-        #{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}
+        #{prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}/site-packages"}
 
       See: https://docs.brew.sh/Homebrew-and-Python
     EOS
