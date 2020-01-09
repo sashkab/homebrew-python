@@ -29,8 +29,8 @@ class PythonAT36 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-42.0.2.zip"
-    sha256 "c5b372090d7c8709ce79a6a66872a91e518f7d65af97fca78135e1cb10d4b940"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-44.0.0.zip"
+    sha256 "e5baf7723e5bb8382fc146e33032b241efc63314211a3a120aaa55d62d2bb008"
   end
 
   resource "pip" do
