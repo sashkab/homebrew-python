@@ -60,7 +60,6 @@ class PythonAT35 < Formula
       --enable-framework=#{frameworks}
       --enable-loadable-sqlite-extensions
       --without-ensurepip
-      --with-dtrace
     ]
 
     args << "--without-gcc" if ENV.compiler == :clang
