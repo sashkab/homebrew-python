@@ -29,18 +29,18 @@ class PythonAT35 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5"
 
   resource "setuptools" do
-  url "https://pypi.org/packages/source/s/setuptools/setuptools-45.2.0.zip"
-  sha256 "89c6e6011ec2f6d57d43a3f9296c4ef022c2cbf49bab26b407fe67992ae3397f"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-45.2.0.zip"
+    sha256 "89c6e6011ec2f6d57d43a3f9296c4ef022c2cbf49bab26b407fe67992ae3397f"
   end
 
   resource "pip" do
-  url "https://www.pypi.org/packages/source/p/pip/pip-20.0.2.tar.gz"
-  sha256 "7db0c8ea4c7ea51c8049640e8e6e7fde949de672bfa4949920675563a5a6967f"
+    url "https://www.pypi.org/packages/source/p/pip/pip-20.0.2.tar.gz"
+    sha256 "7db0c8ea4c7ea51c8049640e8e6e7fde949de672bfa4949920675563a5a6967f"
   end
 
   resource "wheel" do
-  url "https://pypi.org/packages/source/w/wheel/wheel-0.34.2.tar.gz"
-  sha256 "8788e9155fe14f54164c1b9eb0a319d98ef02c160725587ad60f14ddc57b6f96"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.33.6.tar.gz"
+    sha256 "10c9da68765315ed98850f8e048347c3eb06dd81822dc2ab1d4fde9dc9702646"
   end
 
   def install
