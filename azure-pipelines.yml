@@ -7,6 +7,7 @@ jobs:
         set -e
         sudo xcode-select --switch /Applications/Xcode_11.3.app/Contents/Developer
         brew update
+        brew cleanup
         HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/sashkab/homebrew-python"
         mkdir -p "$HOMEBREW_TAP_DIR"
         rm -rf "$HOMEBREW_TAP_DIR"

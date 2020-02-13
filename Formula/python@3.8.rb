@@ -3,6 +3,7 @@ class PythonAT38 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tar.xz"
   sha256 "75894117f6db7051c1b34f37410168844bbb357c139a8a10a352e9bf8be594e8"
+  revision 1
   head "https://github.com/python/cpython.git", :branch => "3.8"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -206,7 +207,7 @@ class PythonAT38 < Formula
     end
 
     # post_install happens after link
-    %W[pip3.8 pip#{xy} easy_install-#{xy} wheel3].each do |e|
+    %W[pip#{xy} easy_install-#{xy}].each do |e|
       (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
