@@ -1,8 +1,8 @@
 class PythonAT37 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.7.6/Python-3.7.6.tar.xz"
-  sha256 "55a2cce72049f0794e9a11a84862e9039af9183603b78bc60d89539f82cf533f"
+  url "https://www.python.org/ftp/python/3.7.7/Python-3.7.7.tar.xz"
+  sha256 "06a0a9f1bf0d8cd1e4121194d666c4e28ddae4dd54346de6c343206599f02136"
   head "https://github.com/python/cpython.git", :branch => "3.7"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -34,8 +34,8 @@ class PythonAT37 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6", "bin/easy_install-3.7"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-45.2.0.zip"
-    sha256 "89c6e6011ec2f6d57d43a3f9296c4ef022c2cbf49bab26b407fe67992ae3397f"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-46.0.0.zip"
+    sha256 "2f00f25b780fbfd0787e46891dcccd805b08d007621f24629025f48afef444b5"
   end
 
   resource "pip" do
@@ -44,8 +44,8 @@ class PythonAT37 < Formula
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.33.6.tar.gz"
-    sha256 "10c9da68765315ed98850f8e048347c3eb06dd81822dc2ab1d4fde9dc9702646"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.34.2.tar.gz"
+    sha256 "8788e9155fe14f54164c1b9eb0a319d98ef02c160725587ad60f14ddc57b6f96"
   end
 
   def install
@@ -160,6 +160,11 @@ class PythonAT37 < Formula
     %w[setuptools pip wheel].each do |r|
       (libexec/r).install resource(r)
     end
+
+    # Remove wheel test data.
+    # It's for people editing wheel and contains binaries which fail `brew linkage`.
+    rm libexec/"wheel/tox.ini"
+    rm_r libexec/"wheel/tests"
   end
 
   def post_install

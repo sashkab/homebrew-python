@@ -8,7 +8,7 @@ Python Version | Latest revision
 ---------------|----------------
 Python 3.5     | 3.5.9
 Python 3.6     | 3.6.10
-Python 3.7     | 3.7.6
+Python 3.7     | 3.7.7
 Python 3.8     | 3.8.1
 
 ## Installing formulae
