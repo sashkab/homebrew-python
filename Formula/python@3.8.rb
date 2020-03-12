@@ -1,9 +1,8 @@
 class PythonAT38 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.8.1/Python-3.8.1.tar.xz"
-  sha256 "75894117f6db7051c1b34f37410168844bbb357c139a8a10a352e9bf8be594e8"
-  revision 2
+  url "https://www.python.org/ftp/python/3.8.2/Python-3.8.2.tar.xz"
+  sha256 "2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df"
   head "https://github.com/python/cpython.git", :branch => "3.8"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -30,8 +29,8 @@ class PythonAT38 < Formula
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6", "bin/easy_install-3.7", "bin/easy_install-3.8"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-45.2.0.zip"
-    sha256 "89c6e6011ec2f6d57d43a3f9296c4ef022c2cbf49bab26b407fe67992ae3397f"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-46.0.0.zip"
+    sha256 "2f00f25b780fbfd0787e46891dcccd805b08d007621f24629025f48afef444b5"
   end
 
   resource "pip" do
@@ -40,8 +39,8 @@ class PythonAT38 < Formula
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.33.6.tar.gz"
-    sha256 "10c9da68765315ed98850f8e048347c3eb06dd81822dc2ab1d4fde9dc9702646"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.34.2.tar.gz"
+    sha256 "8788e9155fe14f54164c1b9eb0a319d98ef02c160725587ad60f14ddc57b6f96"
   end
 
   def install
@@ -144,6 +143,11 @@ class PythonAT38 < Formula
       (libexec/r).install resource(r)
     end
 
+    # Remove wheel test data.
+    # It's for people editing wheel and contains binaries which fail `brew linkage`.
+    rm libexec/"wheel/tox.ini"
+    rm_r libexec/"wheel/tests"
+
     # Install unversioned symlinks in libexec/bin.
     {
       "idle"          => "idle3.8",
@@ -153,6 +157,8 @@ class PythonAT38 < Formula
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
     end
+
+
   end
 
   def post_install
@@ -196,6 +202,9 @@ class PythonAT38 < Formula
 
     rm_rf [bin/"pip", bin/"easy_install"]
     mv bin/"wheel", bin/"wheel3"
+
+    # Create symlink python3 -> python3.8 (due to use of altinstall and conflict with python@3.8 formulae)
+    bin.install_symlink (bin/"python3.8") => "python3"
 
     # Install unversioned symlinks in libexec/bin.
     {
