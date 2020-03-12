@@ -161,7 +161,7 @@ class PythonAT36 < Formula
     # It's for people editing wheel and contains binaries which fail `brew linkage`.
     rm libexec/"wheel/tox.ini"
     rm_r libexec/"wheel/tests"
-end
+  end
 
   def post_install
     ENV.delete "PYTHONPATH"
