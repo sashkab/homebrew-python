@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-  pull_request: 
+  pull_request:
     branches:
       - master
   schedule:
@@ -12,19 +12,16 @@ on:
 
 jobs:
   build:
-
-    runs-on: macOS-latest
-
+    runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Run brew test-bot
-      run: |
-        set -e
-        brew update
-        brew cleanup
-        HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/sashkab/homebrew-python"
-        mkdir -p "$HOMEBREW_TAP_DIR"
-        rm -rf "$HOMEBREW_TAP_DIR"
-        ln -s "$PWD" "$HOMEBREW_TAP_DIR"
-        brew test-bot
-        
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+      - name: Run brew test-bot
+        run: |
+          set -e
+          brew update
+          HOMEBREW_TAP_DIR="/usr/local/Homebrew/Library/Taps/sashkab/homebrew-python"
+          mkdir -p "$HOMEBREW_TAP_DIR"
+          rm -rf "$HOMEBREW_TAP_DIR"
+          ln -s "$PWD" "$HOMEBREW_TAP_DIR"
+          brew test-bot
