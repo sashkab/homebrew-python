@@ -280,10 +280,10 @@ class PythonAT36 < Formula
   end
 
   def caveats
-    if prefix.exist?
-      xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
+    xy = if prefix.exist?
+      (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
     else
-      xy = version.to_s.slice(/(3\.\d)/) || "3.6"
+      version.to_s.slice(/(3\.\d)/) || "3.6"
     end
     <<~EOS
       You can install Python packages with
