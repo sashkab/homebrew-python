@@ -31,8 +31,8 @@ class PythonAT37 < Formula
   uses_from_macos "zlib"
 
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7"
-  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6", "bin/easy_install-3.7"
-
+  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5",
+             "bin/easy_install-3.6", "bin/easy_install-3.7"
   resource "setuptools" do
     url "https://pypi.org/packages/source/s/setuptools/setuptools-46.0.0.zip"
     sha256 "2f00f25b780fbfd0787e46891dcccd805b08d007621f24629025f48afef444b5"
@@ -284,10 +284,10 @@ class PythonAT37 < Formula
   end
 
   def caveats
-    if prefix.exist?
-      xy = (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
+    xy = if prefix.exist?
+      (prefix/"Frameworks/Python.framework/Versions").children.min.basename.to_s
     else
-      xy = version.to_s.slice(/(3\.\d)/) || "3.7"
+      version.to_s.slice(/(3\.\d)/) || "3.7"
     end
     <<~EOS
       You can install Python packages with
