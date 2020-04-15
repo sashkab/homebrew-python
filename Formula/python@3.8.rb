@@ -164,8 +164,6 @@ class PythonAT38 < Formula
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
     end
-
-
   end
 
   def post_install
