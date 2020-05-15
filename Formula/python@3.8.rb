@@ -1,8 +1,8 @@
 class PythonAT38 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.8.2/Python-3.8.2.tar.xz"
-  sha256 "2646e7dc233362f59714c6193017bb2d6f7b38d6ab4a0cb5fbac5c36c4d845df"
+  url "https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tar.xz"
+  sha256 "dfab5ec723c218082fe3d5d7ae17ecbdebffa9a1aea4d64aa3a2ecdd2e795864"
   head "https://github.com/python/cpython.git", :branch => "3.8"
 
   # setuptools remembers the build flags python is built with and uses them to
@@ -36,13 +36,13 @@ class PythonAT38 < Formula
              "bin/easy_install-3.7", "bin/easy_install-3.8"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-46.0.0.zip"
-    sha256 "2f00f25b780fbfd0787e46891dcccd805b08d007621f24629025f48afef444b5"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-46.3.1.zip"
+    sha256 "1c22cd6aae116930efec56de05347ee89ca43b1f1c09c147984e7e7c4a133c85"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-20.0.2.tar.gz"
-    sha256 "7db0c8ea4c7ea51c8049640e8e6e7fde949de672bfa4949920675563a5a6967f"
+    url "https://www.pypi.org/packages/source/p/pip/pip-20.1.tar.gz"
+    sha256 "572c0f25eca7c87217b21f6945b7192744103b18f4e4b16b8a83b227a811e192"
   end
 
   resource "wheel" do
