@@ -33,6 +33,7 @@ class PythonAT37 < Formula
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7"
   skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5",
              "bin/easy_install-3.6", "bin/easy_install-3.7"
+
   resource "setuptools" do
     url "https://pypi.org/packages/source/s/setuptools/setuptools-47.3.1.zip"
     sha256 "843037738d1e34e8b326b5e061f474aca6ef9d7ece41329afbc8aac6195a3920"
