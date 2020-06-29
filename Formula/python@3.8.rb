@@ -36,13 +36,13 @@ class PythonAT38 < Formula
              "bin/easy_install-3.7", "bin/easy_install-3.8"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-46.3.1.zip"
-    sha256 "1c22cd6aae116930efec56de05347ee89ca43b1f1c09c147984e7e7c4a133c85"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-47.3.1.zip"
+    sha256 "843037738d1e34e8b326b5e061f474aca6ef9d7ece41329afbc8aac6195a3920"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-20.1.tar.gz"
-    sha256 "572c0f25eca7c87217b21f6945b7192744103b18f4e4b16b8a83b227a811e192"
+    url "https://www.pypi.org/packages/source/p/pip/pip-20.1.1.tar.gz"
+    sha256 "27f8dc29387dd83249e06e681ce087e6061826582198a425085e0bf4c1cf3a55"
   end
 
   resource "wheel" do
