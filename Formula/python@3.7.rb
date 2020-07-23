@@ -3,7 +3,8 @@ class PythonAT37 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.7.8/Python-3.7.8.tar.xz"
   sha256 "43a543404b363f0037f89df8478f19db2dbc0d6f3ffee310bc2997fa71854a63"
-  head "https://github.com/python/cpython.git", :branch => "3.7"
+  license "Python-2.0"
+  revision 1
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
@@ -35,8 +36,8 @@ class PythonAT37 < Formula
              "bin/easy_install-3.6", "bin/easy_install-3.7"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-47.3.1.zip"
-    sha256 "843037738d1e34e8b326b5e061f474aca6ef9d7ece41329afbc8aac6195a3920"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-49.2.0.zip"
+    sha256 "afe9e81fee0270d3f60d52608549cc8ec4c46dada8c95640c1a00160f577acf2"
   end
 
   resource "pip" do
@@ -79,13 +80,8 @@ class PythonAT37 < Formula
     if MacOS.sdk_path_if_needed
       # Help Python's build system (setuptools/pip) to build things on SDK-based systems
       # The setup.py looks at "-isysroot" to get the sysroot (and not at --sysroot)
-      cflags  << "-isysroot #{MacOS.sdk_path}"
+      cflags  << "-isysroot #{MacOS.sdk_path}" << "-I#{MacOS.sdk_path}/usr/include"
       ldflags << "-isysroot #{MacOS.sdk_path}"
-
-      if DevelopmentTools.clang_build_version < 1000
-        cflags  << "-I/usr/include" # find zlib
-      end
-
       # For the Xlib.h, Python needs this header dir with the system Tk
       # Yep, this needs the absolute path where zlib needed a path relative
       # to the SDK.
@@ -145,12 +141,6 @@ class PythonAT37 < Formula
     inreplace Dir[lib_cellar/"**/_sysconfigdata_m_darwin_darwin.py"],
               %r{('LINKFORSHARED': .*?)'(Python.framework/Versions/3.\d+/Python)'}m,
               "\\1'#{opt_prefix}/Frameworks/\\2'"
-
-    # A fix, because python and python3 both want to install Python.framework
-    # and therefore we can't link both into HOMEBREW_PREFIX/Frameworks
-    # https://github.com/Homebrew/homebrew/issues/15943
-    ["Headers", "Python", "Resources"].each { |f| rm(prefix/"Frameworks/Python.framework/#{f}") }
-    rm prefix/"Frameworks/Python.framework/Versions/Current"
 
     # Symlink the pkgconfig files into HOMEBREW_PREFIX so they're accessible.
     (lib/"pkgconfig").install_symlink Dir["#{frameworks}/Python.framework/Versions/#{xy}/lib/pkgconfig/*"]
@@ -217,11 +207,6 @@ class PythonAT37 < Formula
       "wheel"        => "wheel3",
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
-    end
-
-    # post_install happens after link
-    %W[pip#{xy} easy_install-#{xy}].each do |e|
-      (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
     # Help distutils find brewed stuff when building extensions
@@ -291,9 +276,15 @@ class PythonAT37 < Formula
       version.to_s.slice(/(3\.\d)/) || "3.7"
     end
     <<~EOS
-      You can install Python packages with
-        pip3.7 install <package>
+      Python has been installed as
+        #{opt_bin}/python3
 
+      Unversioned symlinks `python`, `python-config`, `pip` etc. pointing to
+      `python3`, `python3-config`, `pip3` etc., respectively, have been installed into
+        #{opt_libexec}/bin
+
+      You can install Python packages with
+        #{opt_bin}/pip3.7 install <package>
       They will install into the site-package directory
         #{HOMEBREW_PREFIX/"lib/python#{xy}/site-packages"}
 
