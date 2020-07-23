@@ -1,9 +1,9 @@
 class PythonAT38 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tar.xz"
-  sha256 "dfab5ec723c218082fe3d5d7ae17ecbdebffa9a1aea4d64aa3a2ecdd2e795864"
-  head "https://github.com/python/cpython.git", :branch => "3.8"
+  url "https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tar.xz"
+  sha256 "e3003ed57db17e617acb382b0cade29a248c6026b1bd8aad1f976e9af66a83b0"
+  license "Python-2.0"
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
@@ -36,8 +36,8 @@ class PythonAT38 < Formula
              "bin/easy_install-3.7", "bin/easy_install-3.8"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-47.3.1.zip"
-    sha256 "843037738d1e34e8b326b5e061f474aca6ef9d7ece41329afbc8aac6195a3920"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-49.2.0.zip"
+    sha256 "afe9e81fee0270d3f60d52608549cc8ec4c46dada8c95640c1a00160f577acf2"
   end
 
   resource "pip" do
@@ -48,6 +48,15 @@ class PythonAT38 < Formula
   resource "wheel" do
     url "https://pypi.org/packages/source/w/wheel/wheel-0.34.2.tar.gz"
     sha256 "8788e9155fe14f54164c1b9eb0a319d98ef02c160725587ad60f14ddc57b6f96"
+  end
+
+  # Remove this block when upstream adds arm64 compatibility
+  if Hardware::CPU.arm?
+    # Upstream PRs #20171, #21114, #21224 and #21249
+    patch do
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/113aa84/python/3.8.3.patch"
+      sha256 "9c0d7c28c33c6036860457bd9c5a03026c71bd034907b77fbf861ff5fe216ed0"
+    end
   end
 
   def install
