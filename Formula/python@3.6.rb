@@ -3,7 +3,7 @@ class PythonAT36 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.6.11/Python-3.6.11.tar.xz"
   sha256 "741ebdcbc4e3937a5ff23517dd455ebf7d543ea9fef6f5cf6f46e575d6c4fda4"
-  head "https://github.com/python/cpython.git", :branch => "3.6"
+  head "https://github.com/python/cpython.git", branch: "3.6"
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.

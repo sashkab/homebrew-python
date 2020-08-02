@@ -3,7 +3,7 @@ class PythonAT35 < Formula
   homepage "https://www.python.org/"
   url "https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz"
   sha256 "c24a37c63a67f53bdd09c5f287b5cff8e8b98f857bf348c577d454d3f74db049"
-  head "https://github.com/python/cpython.git", :branch => "3.5"
+  head "https://github.com/python/cpython.git", branch: "3.5"
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
