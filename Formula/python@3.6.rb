@@ -4,6 +4,12 @@ class PythonAT36 < Formula
   url "https://www.python.org/ftp/python/3.6.12/Python-3.6.12.tar.xz"
   sha256 "70953a9b5d6891d92e65d184c3512126a15814bee15e1eff2ddcce04334e9a99"
   head "https://github.com/python/cpython.git", branch: "3.6"
+  license "Python-2.0"
+
+  livecheck do
+    url "https://www.python.org/ftp/python/"
+    regex(%r{href=.*?v?(3\.6(?:\.\d+)*)/?["' >]}i)
+  end
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
