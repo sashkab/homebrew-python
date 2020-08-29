@@ -1,10 +1,14 @@
 class PythonAT37 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.7.8/Python-3.7.8.tar.xz"
-  sha256 "43a543404b363f0037f89df8478f19db2dbc0d6f3ffee310bc2997fa71854a63"
+  url "https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tar.xz"
+  sha256 "91923007b05005b5f9bd46f3b9172248aea5abc1543e8a636d59e629c3331b01"
   license "Python-2.0"
-  revision 1
+
+  livecheck do
+    url "https://www.python.org/ftp/python/"
+    regex(%r{href=.*?v?(3\.7(?:\.\d+)*)/?["' >]}i)
+  end
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
@@ -36,18 +40,18 @@ class PythonAT37 < Formula
              "bin/easy_install-3.6", "bin/easy_install-3.7"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-49.2.0.zip"
-    sha256 "afe9e81fee0270d3f60d52608549cc8ec4c46dada8c95640c1a00160f577acf2"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-49.6.0.zip"
+    sha256 "46bd862894ed22c2edff033c758c2dc026324788d758e96788e8f7c11f4e9707"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-20.1.1.tar.gz"
-    sha256 "27f8dc29387dd83249e06e681ce087e6061826582198a425085e0bf4c1cf3a55"
+    url "https://www.pypi.org/packages/source/p/pip/pip-20.2.2.tar.gz"
+    sha256 "58a3b0b55ee2278104165c7ee7bc8e2db6f635067f3c66cf637113ec5aa71584"
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.34.2.tar.gz"
-    sha256 "8788e9155fe14f54164c1b9eb0a319d98ef02c160725587ad60f14ddc57b6f96"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.35.1.tar.gz"
+    sha256 "99a22d87add3f634ff917310a3d87e499f19e663413a52eb9232c447aa646c9f"
   end
 
   def install
