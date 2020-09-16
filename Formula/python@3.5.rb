@@ -1,10 +1,9 @@
 class PythonAT35 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.5.9/Python-3.5.9.tar.xz"
-  sha256 "c24a37c63a67f53bdd09c5f287b5cff8e8b98f857bf348c577d454d3f74db049"
+  url "https://www.python.org/ftp/python/3.5.10/Python-3.5.10.tar.xz"
+  sha256 "0f0fa8685c1dc1f1dacb0b4e7779796b90aef99dc1fa4967a71b9da7b57d4a28"
   license "Python-2.0"
-  head "https://github.com/python/cpython.git", branch: "3.5"
 
   livecheck do
     url "https://www.python.org/ftp/python/"
