@@ -9,7 +9,7 @@ Python Version | Latest revision
 Python 3.5     | 3.5.10 (deprecated)
 Python 3.6     | 3.6.12
 Python 3.7     | 3.7.9
-Python 3.8     | 3.8.5
+Python 3.8     | 3.8.6
 
 ## Installing formulae
 
