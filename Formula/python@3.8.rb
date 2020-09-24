@@ -1,8 +1,8 @@
 class PythonAT38 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tar.xz"
-  sha256 "e3003ed57db17e617acb382b0cade29a248c6026b1bd8aad1f976e9af66a83b0"
+  url "https://www.python.org/ftp/python/3.8.6/Python-3.8.6.tar.xz"
+  sha256 "a9e0b79d27aa056eb9cce8d63a427b5f9bab1465dee3f942dcfdb25a82f4ab8a"
   license "Python-2.0"
 
   livecheck do
@@ -41,13 +41,13 @@ class PythonAT38 < Formula
              "bin/easy_install-3.7", "bin/easy_install-3.8"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-49.6.0.zip"
-    sha256 "46bd862894ed22c2edff033c758c2dc026324788d758e96788e8f7c11f4e9707"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-50.3.0.zip"
+    sha256 "39060a59d91cf5cf403fa3bacbb52df4205a8c3585e0b9ba4b30e0e19d4c4b18"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-20.2.2.tar.gz"
-    sha256 "58a3b0b55ee2278104165c7ee7bc8e2db6f635067f3c66cf637113ec5aa71584"
+    url "https://www.pypi.org/packages/source/p/pip/pip-20.2.3.tar.gz"
+    sha256 "30c70b6179711a7c4cf76da89e8a0f5282279dfb0278bec7b94134be92543b6d"
   end
 
   resource "wheel" do
