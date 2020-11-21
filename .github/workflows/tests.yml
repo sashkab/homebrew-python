@@ -3,12 +3,12 @@ on:
   push:
     branches: master
   pull_request:
-  schedule:
-    - cron: "0 5 * * 0"
-
 jobs:
   test-bot:
-    runs-on: macOS-latest
+    strategy:
+      matrix:
+        os: [macOS-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -34,3 +34,10 @@ jobs:
 
       - run: brew test-bot --only-formulae
         if: github.event_name == 'pull_request'
+
+      - name: Upload bottles as artifact
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/upload-artifact@main
+        with:
+          name: bottles
+          path: '*.bottle.*'
