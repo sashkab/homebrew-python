@@ -4,6 +4,7 @@ class PythonAT38 < Formula
   url "https://www.python.org/ftp/python/3.8.6/Python-3.8.6.tar.xz"
   sha256 "a9e0b79d27aa056eb9cce8d63a427b5f9bab1465dee3f942dcfdb25a82f4ab8a"
   license "Python-2.0"
+  revision 1
 
   livecheck do
     url "https://www.python.org/ftp/python/"
@@ -232,11 +233,6 @@ class PythonAT38 < Formula
       "wheel"        => "wheel3",
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
-    end
-
-    # post_install happens after link
-    %W[pip#{xy} easy_install-#{xy}].each do |e|
-      (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
     # Help distutils find brewed stuff when building extensions
