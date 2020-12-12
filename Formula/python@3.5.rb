@@ -10,6 +10,11 @@ class PythonAT35 < Formula
     regex(%r{href=.*?v?(3\.5(?:\.\d+)*)/?["' >]}i)
   end
 
+  bottle do
+    root_url "https://github.com/sashkab/homebrew-python/releases/download/python@3.5-3.5.10"
+    sha256 "1444be676c9b1b6c3fbaa85b16b0e96340a0d1d77e26643e45ac3fd4c1b51bd1" => :catalina
+  end
+
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
   pour_bottle? do
