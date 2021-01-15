@@ -4,7 +4,7 @@ class PythonAT37 < Formula
   url "https://www.python.org/ftp/python/3.7.9/Python-3.7.9.tar.xz"
   sha256 "91923007b05005b5f9bd46f3b9172248aea5abc1543e8a636d59e629c3331b01"
   license "Python-2.0"
-  revision 1
+  revision 2
 
   livecheck do
     url "https://www.python.org/ftp/python/"
@@ -47,18 +47,18 @@ class PythonAT37 < Formula
              "bin/easy_install-3.6", "bin/easy_install-3.7"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-50.3.2.zip"
-    sha256 "ed0519d27a243843b05d82a5e9d01b0b083d9934eaa3d02779a23da18077bd3c"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-51.1.2.tar.gz"
+    sha256 "4fa149145ba5dcd4aaa89912ec92393a31170eaf17fe0268b1429538bad1f85a"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-20.2.4.tar.gz"
-    sha256 "85c99a857ea0fb0aedf23833d9be5c40cf253fe24443f0829c7b472e23c364a1"
+    url "https://www.pypi.org/packages/source/p/pip/pip-20.3.3.tar.gz"
+    sha256 "79c1ac8a9dccbec8752761cb5a2df833224263ca661477a2a9ed03ddf4e0e3ba"
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.35.1.tar.gz"
-    sha256 "99a22d87add3f634ff917310a3d87e499f19e663413a52eb9232c447aa646c9f"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.36.2.tar.gz"
+    sha256 "e11eefd162658ea59a60a0f6c7d493a7190ea4b9a85e335b33489d9f17e0245e"
   end
 
   def install
