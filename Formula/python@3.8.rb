@@ -4,6 +4,7 @@ class PythonAT38 < Formula
   url "https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tar.xz"
   sha256 "ddcc1df16bb5b87aa42ec5d20a5b902f2d088caa269b28e01590f97a798ec50a"
   license "Python-2.0"
+  revision 1
 
   livecheck do
     url "https://www.python.org/ftp/python/"
@@ -60,12 +61,12 @@ class PythonAT38 < Formula
     sha256 "99a22d87add3f634ff917310a3d87e499f19e663413a52eb9232c447aa646c9f"
   end
 
-  # Remove this block when upstream adds arm64 compatibility
+  # Remove this block when upstream backports arm64 compatibility to the 3.8 branch
   if Hardware::CPU.arm?
     # Upstream PRs #20171, #21114, #21224 and #21249
     patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/113aa84/python/3.8.3.patch"
-      sha256 "9c0d7c28c33c6036860457bd9c5a03026c71bd034907b77fbf861ff5fe216ed0"
+      url "https://raw.githubusercontent.com/Homebrew/formula-patches/cef51fde/python/3.8.7.patch"
+      sha256 "01ebca9fed99fd0b34abfd198e7d6137e3f851d9d1a07ded837b28c7998e810c"
     end
   end
 
