@@ -1,6 +1,4 @@
 {
-  "python27": "python@2.7",
-  "python35": "python@3.5",
   "python36": "python@3.6",
   "python37": "python@3.7"
 }
