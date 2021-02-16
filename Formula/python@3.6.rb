@@ -1,10 +1,9 @@
 class PythonAT36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.6.12/Python-3.6.12.tar.xz"
-  sha256 "70953a9b5d6891d92e65d184c3512126a15814bee15e1eff2ddcce04334e9a99"
+  url "https://www.python.org/ftp/python/3.6.13/Python-3.6.13.tar.xz"
+  sha256 "a47a43a53abb42286a2c11965343ff56711b9e64e8d11bf2c6701a4fb8ce1a0f"
   license "Python-2.0"
-  revision 2
   head "https://github.com/python/cpython.git", branch: "3.6"
 
   livecheck do
@@ -39,16 +38,15 @@ class PythonAT36 < Formula
   depends_on "xz"
 
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6"
-  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-51.1.2.tar.gz"
-    sha256 "4fa149145ba5dcd4aaa89912ec92393a31170eaf17fe0268b1429538bad1f85a"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-53.0.0.tar.gz"
+    sha256 "1b18ef17d74ba97ac9c0e4b4265f123f07a8ae85d9cd093949fa056d3eeeead5"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-20.3.3.tar.gz"
-    sha256 "79c1ac8a9dccbec8752761cb5a2df833224263ca661477a2a9ed03ddf4e0e3ba"
+    url "https://www.pypi.org/packages/source/p/pip/pip-21.0.1.tar.gz"
+    sha256 "99bbde183ec5ec037318e774b0d8ae0a64352fe53b2c7fd630be1d07e94f41e5"
   end
 
   resource "wheel" do
@@ -215,20 +213,19 @@ class PythonAT36 < Formula
       end
     end
 
-    rm_rf [bin/"pip", bin/"easy_install"]
+    rm_rf [bin/"pip"]
     mv bin/"wheel", bin/"wheel3"
 
     # Install unversioned symlinks in libexec/bin.
     {
-      "easy_install" => "easy_install-#{xy}",
-      "pip"          => "pip3",
-      "wheel"        => "wheel3",
+      "pip"   => "pip3",
+      "wheel" => "wheel3",
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
     end
 
     # post_install happens after link
-    %W[pip#{xy} easy_install-#{xy}].each do |e|
+    %W[pip#{xy}].each do |e|
       (HOMEBREW_PREFIX/"bin").install_symlink bin/e
     end
 
