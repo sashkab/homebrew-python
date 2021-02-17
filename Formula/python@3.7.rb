@@ -13,7 +13,7 @@ class PythonAT37 < Formula
 
   bottle do
     root_url "https://github.com/sashkab/homebrew-python/releases/download/python@3.7-3.7.9_3"
-    sha256 "d1e64cc0159c4886d69f82ae100b2526e72c11aa5fff5be53accfcfc713f1d46" => :catalina
+    sha256 catalina: "d1e64cc0159c4886d69f82ae100b2526e72c11aa5fff5be53accfcfc713f1d46"
   end
 
   # setuptools remembers the build flags python is built with and uses them to
