@@ -4,6 +4,7 @@ class PythonAT38 < Formula
   url "https://www.python.org/ftp/python/3.8.7/Python-3.8.7.tar.xz"
   sha256 "ddcc1df16bb5b87aa42ec5d20a5b902f2d088caa269b28e01590f97a798ec50a"
   license "Python-2.0"
+  revision 1
 
   livecheck do
     url "https://www.python.org/ftp/python/"
@@ -43,17 +44,15 @@ class PythonAT38 < Formula
   uses_from_macos "zlib"
 
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6", "bin/pip-3.7", "bin/pip-3.8"
-  skip_clean "bin/easy_install3", "bin/easy_install-3.4", "bin/easy_install-3.5", "bin/easy_install-3.6",
-             "bin/easy_install-3.7", "bin/easy_install-3.8"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-51.1.2.tar.gz"
-    sha256 "4fa149145ba5dcd4aaa89912ec92393a31170eaf17fe0268b1429538bad1f85a"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-53.0.0.tar.gz"
+    sha256 "1b18ef17d74ba97ac9c0e4b4265f123f07a8ae85d9cd093949fa056d3eeeead5"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-20.3.3.tar.gz"
-    sha256 "79c1ac8a9dccbec8752761cb5a2df833224263ca661477a2a9ed03ddf4e0e3ba"
+    url "https://www.pypi.org/packages/source/p/pip/pip-21.0.1.tar.gz"
+    sha256 "99bbde183ec5ec037318e774b0d8ae0a64352fe53b2c7fd630be1d07e94f41e5"
   end
 
   resource "wheel" do
@@ -226,7 +225,7 @@ class PythonAT38 < Formula
       end
     end
 
-    rm_rf [bin/"pip", bin/"easy_install"]
+    rm_rf [bin/"pip"]
     mv bin/"wheel", bin/"wheel3"
 
     # Create symlink python3 -> python3.8 (due to use of altinstall and conflict with python@3.8 formulae)
@@ -234,9 +233,8 @@ class PythonAT38 < Formula
 
     # Install unversioned symlinks in libexec/bin.
     {
-      "easy_install" => "easy_install-#{xy}",
-      "pip"          => "pip3",
-      "wheel"        => "wheel3",
+      "pip"   => "pip3",
+      "wheel" => "wheel3",
     }.each do |unversioned_name, versioned_name|
       (libexec/"bin").install_symlink (bin/versioned_name).realpath => unversioned_name
     end
