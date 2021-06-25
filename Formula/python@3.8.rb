@@ -17,14 +17,7 @@ class PythonAT38 < Formula
 
   # setuptools remembers the build flags python is built with and uses them to
   # build packages later. Xcode-only systems need different flags.
-  pour_bottle? do
-    reason <<~EOS
-      The bottle needs the Apple Command Line Tools to be installed.
-        You can install them, if desired, with:
-          xcode-select --install
-    EOS
-    satisfy { MacOS::CLT.installed? }
-  end
+  pour_bottle? only_if: :clt_installed
 
   keg_only :versioned_formula
 
@@ -58,15 +51,6 @@ class PythonAT38 < Formula
   resource "wheel" do
     url "https://pypi.org/packages/source/w/wheel/wheel-0.36.2.tar.gz"
     sha256 "e11eefd162658ea59a60a0f6c7d493a7190ea4b9a85e335b33489d9f17e0245e"
-  end
-
-  # Remove this block when upstream backports arm64 compatibility to the 3.8 branch
-  if Hardware::CPU.arm?
-    # Upstream PRs #20171, #21114, #21224 and #21249
-    patch do
-      url "https://raw.githubusercontent.com/Homebrew/formula-patches/cef51fde/python/3.8.7.patch"
-      sha256 "01ebca9fed99fd0b34abfd198e7d6137e3f851d9d1a07ded837b28c7998e810c"
-    end
   end
 
   # Link against libmpdec.so.3, update for mpdecimal.h symbol cleanup.
