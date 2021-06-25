@@ -30,6 +30,7 @@ class PythonAT38 < Formula
 
   depends_on "pkg-config" => :build
   depends_on "gdbm"
+  depends_on "mpdecimal"
   depends_on "openssl@1.1"
   depends_on "readline"
   depends_on "sqlite"
@@ -68,11 +69,22 @@ class PythonAT38 < Formula
     end
   end
 
+  # Link against libmpdec.so.3, update for mpdecimal.h symbol cleanup.
+  patch do
+    url "https://www.bytereef.org/contrib/decimal-3.8.diff"
+    sha256 "104083617f086375974908f619369cd64005d5ffc314038c31b8b49032280148"
+  end
+
   def install
     # Unset these so that installing pip and setuptools puts them where we want
     # and not into some other Python the user has installed.
     ENV["PYTHONHOME"] = nil
     ENV["PYTHONPATH"] = nil
+
+    # Override the auto-detection in setup.py, which assumes a universal build.
+    on_macos do
+      ENV["PYTHON_DECIMAL_WITH_MACHINE"] = Hardware::CPU.arm? ? "uint128" : "x64"
+    end
 
     xy = (buildpath/"configure.ac").read.slice(/PYTHON_VERSION, (3\.\d)/, 1)
     lib_cellar = prefix/"Frameworks/Python.framework/Versions/#{xy}/lib/python#{xy}"
@@ -87,6 +99,7 @@ class PythonAT38 < Formula
       --without-ensurepip
       --with-dtrace
       --with-openssl=#{Formula["openssl@1.1"].opt_prefix}
+      --with-system-libmpdec
     ]
 
     cflags   = ["-I#{HOMEBREW_PREFIX}/include"]
@@ -317,7 +330,7 @@ class PythonAT38 < Formula
     # and it can occur that building sqlite silently fails if OSX's sqlite is used.
     system "#{bin}/python#{xy}", "-c", "import sqlite3"
     # Check if some other modules import. Then the linked libs are working.
-
+    system "#{bin}/python#{xy}", "-c", "import _decimal"
     system "#{bin}/python#{xy}", "-c", "import tkinter; root = tkinter.Tk()"
 
     system "#{bin}/python#{xy}", "-c", "import _gdbm"
