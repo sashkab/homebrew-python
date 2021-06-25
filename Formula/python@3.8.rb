@@ -4,6 +4,7 @@ class PythonAT38 < Formula
   url "https://www.python.org/ftp/python/3.8.10/Python-3.8.10.tar.xz"
   sha256 "6af24a66093dd840bcccf371d4044a3027e655cf24591ce26e48022bc79219d9"
   license "Python-2.0"
+  revision 1
 
   livecheck do
     url "https://www.python.org/ftp/python/"
