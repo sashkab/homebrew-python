@@ -1,8 +1,8 @@
 class PythonAT36 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.6.13/Python-3.6.13.tar.xz"
-  sha256 "a47a43a53abb42286a2c11965343ff56711b9e64e8d11bf2c6701a4fb8ce1a0f"
+  url "https://www.python.org/ftp/python/3.6.14/Python-3.6.14.tar.xz"
+  sha256 "2663a7a0cfbd00fc76269dce4317db0b54be53c0f4d705aabb32b87efa02d5ae"
   license "Python-2.0"
   head "https://github.com/python/cpython.git", branch: "3.6"
 
@@ -39,13 +39,13 @@ class PythonAT36 < Formula
   skip_clean "bin/pip3", "bin/pip-3.4", "bin/pip-3.5", "bin/pip-3.6"
 
   resource "setuptools" do
-    url "https://pypi.org/packages/source/s/setuptools/setuptools-53.0.0.tar.gz"
-    sha256 "1b18ef17d74ba97ac9c0e4b4265f123f07a8ae85d9cd093949fa056d3eeeead5"
+    url "https://pypi.org/packages/source/s/setuptools/setuptools-57.0.0.tar.gz"
+    sha256 "401cbf33a7bf817d08014d51560fc003b895c4cdc1a5b521ad2969e928a07535"
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-21.0.1.tar.gz"
-    sha256 "99bbde183ec5ec037318e774b0d8ae0a64352fe53b2c7fd630be1d07e94f41e5"
+    url "https://www.pypi.org/packages/source/p/pip/pip-21.1.2.tar.gz"
+    sha256 "eb5df6b9ab0af50fe1098a52fd439b04730b6e066887ff7497357b9ebd19f79b"
   end
 
   resource "wheel" do
