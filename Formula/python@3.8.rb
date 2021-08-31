@@ -1,8 +1,8 @@
 class PythonAT38 < Formula
   desc "Interpreted, interactive, object-oriented programming language"
   homepage "https://www.python.org/"
-  url "https://www.python.org/ftp/python/3.8.11/Python-3.8.11.tar.xz"
-  sha256 "fb1a1114ebfe9e97199603c6083e20b236a0e007a2c51f29283ffb50c1420fb2"
+  url "https://www.python.org/ftp/python/3.8.12/Python-3.8.12.tar.xz"
+  sha256 "b1d3a76420375343b5e8a22fceb1ac65b77193e9ed27146524f0a9db058728ea"
   license "Python-2.0"
 
   livecheck do
@@ -48,13 +48,13 @@ class PythonAT38 < Formula
   end
 
   resource "pip" do
-    url "https://www.pypi.org/packages/source/p/pip/pip-21.2.1.tar.gz"
-    sha256 "303a82aaa24cdc01f7ebbd1afc7d1b871a4aa0a88bb5bedef1fa86a3ee44ca0a"
+    url "https://www.pypi.org/packages/source/p/pip/pip-21.2.4.tar.gz"
+    sha256 "0eb8a1516c3d138ae8689c0c1a60fde7143310832f9dc77e11d8a4bc62de193b"
   end
 
   resource "wheel" do
-    url "https://pypi.org/packages/source/w/wheel/wheel-0.36.2.tar.gz"
-    sha256 "e11eefd162658ea59a60a0f6c7d493a7190ea4b9a85e335b33489d9f17e0245e"
+    url "https://pypi.org/packages/source/w/wheel/wheel-0.37.0.tar.gz"
+    sha256 "e2ef7239991699e3355d54f8e968a21bb940a1dbf34a4d226741e64462516fad"
   end
 
   # Link against libmpdec.so.3, update for mpdecimal.h symbol cleanup.
