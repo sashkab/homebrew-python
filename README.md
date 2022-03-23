@@ -31,11 +31,13 @@ In order to update to latest version of `pip`, `setuptools` and `wheel`, use fol
 /usr/local/opt/python@3.X/bin/python3.X -mpip install -U pip setuptools wheel
 ```
 
-## Python 2.7
+## Deprecations
+
+### Python 2.7
 
 Python 2.7 has been removed from this repository in early January 2020 after it reached end-of-life. See #46 for details.
 
-## Python 3.6
+### Python 3.6
 
 Python 3.6 has been removed from this repository in March 2022 after it reached end-of-life.
 
