@@ -11,7 +11,7 @@ Python 3.8     | 3.8.12
 
 ## Installing formulae
 
-Replace `X` in examples below with minor version of Python --  `5` for Python 3.5, `6` for Python 3.6, `7` for Python 3.7, or `8` for Python 3.8.
+Replace `X` in examples below with minor version of Python --  `7` for Python 3.7, or `8` for Python 3.8.
 
 Python 3.X will be installed into `/usr/local/opt/python@3.X`, as a keg, i.e without linking into `/usr/local/bin` in order to avoid conflicts with the python formulae.
 
@@ -34,6 +34,10 @@ In order to update to latest version of `pip`, `setuptools` and `wheel`, use fol
 ## Python 2.7
 
 Python 2.7 has been removed from this repository in early January 2020 after it reached end-of-life. See #46 for details.
+
+## Python 3.6
+
+Python 3.6 has been removed from this repository in March 2022 after it reached end-of-life.
 
 ## Acknowledgement
 
